@@ -249,20 +249,23 @@ body {
 }
 
 #footer .left{
+  display:block;
   text-align:center; 
   float:left;
   min-height: 50px;
-  margin:auto auto auto 10%;
+  margin:1.1rem auto auto 10%;
 }
 
 #footer .right{
+  display:block;
   float:right;
   text-align:center;
   min-height: 50px;
-  margin:auto 10% auto auto;
+  margin:1.1rem 10% auto auto;
 }
 
 #footer .centered{
+  display:block;
   text-align:center;
   min-height: 50px;
   margin:auto 10% auto 10%;
@@ -274,8 +277,9 @@ body {
   align-items: center;
   justify-content: center;
   color: #ffffff;
-  min-height: 160px;
+  /* min-height: 160px; */
   text-align: center;
+  margin:auto 10% auto 10%
 }
 
 #footer a {
