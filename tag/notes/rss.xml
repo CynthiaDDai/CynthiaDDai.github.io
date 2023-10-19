@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+    <channel>
+        <title>------------------- • Posts by &#34;notes&#34; tag</title>
+        <link>http://example.com</link>
+        <description>doing math</description>
+        <language>en</language>
+        <pubDate>Mon, 30 Nov 3001 00:00:00 -0500</pubDate>
+        <lastBuildDate>Mon, 30 Nov 3001 00:00:00 -0500</lastBuildDate>
+        <category>CV</category>
+        <category>About</category>
+        <category>Notes</category>
+        <category>Publication</category>
+        <category>Teaching</category>
+        <item>
+            <guid isPermalink="true">http://example.com/3001/11/30/Notes/Notes/</guid>
+            <title>Notes</title>
+            <link>http://example.com/3001/11/30/Notes/Notes/</link>
+            <category>Notes</category>
+            <pubDate>Mon, 30 Nov 3001 00:00:00 -0500</pubDate>
+            <description><![CDATA[ &lt;h1 id=&#34;algebraic-stacks&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#algebraic-stacks&#34;&gt;#&lt;/a&gt; Algebraic Stacks&lt;/h1&gt;
+&lt;p&gt;embed something here&lt;/p&gt;
+&lt;h1 id=&#34;test&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#test&#34;&gt;#&lt;/a&gt; Test&lt;/h1&gt;
+ ]]></description>
+        </item>
+    </channel>
+</rss>

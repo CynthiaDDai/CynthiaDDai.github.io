@@ -1,0 +1,18 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "------------------- • All posts by \"teaching\" tag",
+    "description": "doing math",
+    "home_page_url": "http://example.com",
+    "items": [
+        {
+            "id": "http://example.com/3002/11/30/Teaching/Teaching/",
+            "url": "http://example.com/3002/11/30/Teaching/Teaching/",
+            "title": "Teaching",
+            "date_published": "3002-11-30T05:00:00.000Z",
+            "content_html": "<h1 id=\"teaching-assistant\"><a class=\"markdownIt-Anchor\" href=\"#teaching-assistant\">#</a> Teaching Assistant</h1>\n<h2 id=\"university-of-waterloo\"><a class=\"markdownIt-Anchor\" href=\"#university-of-waterloo\">#</a> University of Waterloo</h2>\n<ul>\n<li>MATH 145, MATH 146, MATH 235, MATH 115</li>\n</ul>\n",
+            "tags": [
+                "Teaching"
+            ]
+        }
+    ]
+}

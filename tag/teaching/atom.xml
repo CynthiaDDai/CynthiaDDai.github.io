@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>http://example.com</id>
+    <title>------------------- • Posts by &#34;teaching&#34; tag</title>
+    <link href="http://example.com" />
+    <updated>3002-11-30T05:00:00.000Z</updated>
+    <category term="CV" />
+    <category term="About" />
+    <category term="Notes" />
+    <category term="Publication" />
+    <category term="Teaching" />
+    <entry>
+        <id>http://example.com/3002/11/30/Teaching/Teaching/</id>
+        <title>Teaching</title>
+        <link rel="alternate" href="http://example.com/3002/11/30/Teaching/Teaching/"/>
+        <content type="html">&lt;h1 id=&#34;teaching-assistant&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#teaching-assistant&#34;&gt;#&lt;/a&gt; Teaching Assistant&lt;/h1&gt;
+&lt;h2 id=&#34;university-of-waterloo&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#university-of-waterloo&#34;&gt;#&lt;/a&gt; University of Waterloo&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;MATH 145, MATH 146, MATH 235, MATH 115&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+        <category term="Teaching" />
+        <updated>3002-11-30T05:00:00.000Z</updated>
+    </entry>
+</feed>

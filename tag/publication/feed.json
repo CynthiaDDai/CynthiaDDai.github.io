@@ -1,0 +1,18 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "------------------- • All posts by \"publication\" tag",
+    "description": "doing math",
+    "home_page_url": "http://example.com",
+    "items": [
+        {
+            "id": "http://example.com/3004/11/30/Publication/Publication/",
+            "url": "http://example.com/3004/11/30/Publication/Publication/",
+            "title": "Research",
+            "date_published": "3004-11-30T05:00:00.000Z",
+            "content_html": "<h1 id=\"publications\"><a class=\"markdownIt-Anchor\" href=\"#publications\">#</a> Publications</h1>\n<h2 id=\"work-in-progress-1\"><a class=\"markdownIt-Anchor\" href=\"#work-in-progress-1\">#</a> Work in progress 1</h2>\n<p>description</p>\n<h2 id=\"work-in-progress-2\"><a class=\"markdownIt-Anchor\" href=\"#work-in-progress-2\">#</a> Work in progress 2</h2>\n<p>description</p>\n<h1 id=\"preprints\"><a class=\"markdownIt-Anchor\" href=\"#preprints\">#</a> Preprints</h1>\n",
+            "tags": [
+                "Publication"
+            ]
+        }
+    ]
+}

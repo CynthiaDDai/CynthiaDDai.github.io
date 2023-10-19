@@ -1,0 +1,18 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "------------------- • All posts by \"cv\" tag",
+    "description": "doing math",
+    "home_page_url": "http://example.com",
+    "items": [
+        {
+            "id": "http://example.com/3003/11/30/CV/CV/",
+            "url": "http://example.com/3003/11/30/CV/CV/",
+            "title": "CV",
+            "date_published": "3003-11-30T05:00:00.000Z",
+            "content_html": "<p>Do embed here!!!</p>\n",
+            "tags": [
+                "CV"
+            ]
+        }
+    ]
+}

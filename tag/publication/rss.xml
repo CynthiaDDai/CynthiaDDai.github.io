@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+    <channel>
+        <title>------------------- • Posts by &#34;publication&#34; tag</title>
+        <link>http://example.com</link>
+        <description>doing math</description>
+        <language>en</language>
+        <pubDate>Fri, 30 Nov 3004 00:00:00 -0500</pubDate>
+        <lastBuildDate>Fri, 30 Nov 3004 00:00:00 -0500</lastBuildDate>
+        <category>CV</category>
+        <category>About</category>
+        <category>Notes</category>
+        <category>Publication</category>
+        <category>Teaching</category>
+        <item>
+            <guid isPermalink="true">http://example.com/3004/11/30/Publication/Publication/</guid>
+            <title>Research</title>
+            <link>http://example.com/3004/11/30/Publication/Publication/</link>
+            <category>Publication</category>
+            <pubDate>Fri, 30 Nov 3004 00:00:00 -0500</pubDate>
+            <description><![CDATA[ &lt;h1 id=&#34;publications&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#publications&#34;&gt;#&lt;/a&gt; Publications&lt;/h1&gt;
+&lt;h2 id=&#34;work-in-progress-1&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#work-in-progress-1&#34;&gt;#&lt;/a&gt; Work in progress 1&lt;/h2&gt;
+&lt;p&gt;description&lt;/p&gt;
+&lt;h2 id=&#34;work-in-progress-2&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#work-in-progress-2&#34;&gt;#&lt;/a&gt; Work in progress 2&lt;/h2&gt;
+&lt;p&gt;description&lt;/p&gt;
+&lt;h1 id=&#34;preprints&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#preprints&#34;&gt;#&lt;/a&gt; Preprints&lt;/h1&gt;
+ ]]></description>
+        </item>
+    </channel>
+</rss>

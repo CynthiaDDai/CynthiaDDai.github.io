@@ -1,0 +1,18 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "------------------- • All posts by \"notes\" tag",
+    "description": "doing math",
+    "home_page_url": "http://example.com",
+    "items": [
+        {
+            "id": "http://example.com/3001/11/30/Notes/Notes/",
+            "url": "http://example.com/3001/11/30/Notes/Notes/",
+            "title": "Notes",
+            "date_published": "3001-11-30T05:00:00.000Z",
+            "content_html": "<h1 id=\"algebraic-stacks\"><a class=\"markdownIt-Anchor\" href=\"#algebraic-stacks\">#</a> Algebraic Stacks</h1>\n<p>embed something here</p>\n<h1 id=\"test\"><a class=\"markdownIt-Anchor\" href=\"#test\">#</a> Test</h1>\n",
+            "tags": [
+                "Notes"
+            ]
+        }
+    ]
+}
