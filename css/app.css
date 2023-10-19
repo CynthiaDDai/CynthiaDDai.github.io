@@ -5296,3 +5296,7 @@ span.label {
 .audio.playing .cover .disc {
   animation-play-state: running;
 }
+
+.body h1 {
+  font-size: xx-large;
+}
