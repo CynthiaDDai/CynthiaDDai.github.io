@@ -6,7 +6,7 @@ set -euo pipefail
 
 personal=(
   src/content src/config/site.json src/styles/fonts.css config.jsonc LICENSE
-  public/cv.pdf public/assets public/notes public/fonts/README.txt public/fonts/huiwen-mincho.woff2 public/fonts/huiwen-mincho-LICENSE.txt
+  public/cv.pdf public/assets public/notes public/fonts/README.txt public/fonts/huiwen-mincho.subset.woff2 public/fonts/huiwen-mincho-LICENSE.txt
   docs/audits terminal_personal_website_master_spec.md scripts/export-template.sh
 )
 # Words that only appear in personal content; the export stops if any of them would reach the template.

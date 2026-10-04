@@ -20,7 +20,7 @@
 /* Huiwen Mincho, improved (CC0): Chinese and Japanese characters only. */
 @font-face {
   font-family: 'Huiwen Mincho';
-  src: url('/fonts/huiwen-mincho.woff2') format('woff2');
+  src: url('/fonts/huiwen-mincho.subset.woff2') format('woff2');
   font-display: swap;
   /* Huiwen Mincho looks small beside other fonts at the same size; enlarge its glyphs only. */
   size-adjust: 110%;

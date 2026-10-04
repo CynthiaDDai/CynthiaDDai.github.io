@@ -14,7 +14,7 @@ maple-mono-{regular,italic,medium,semibold,bold}.woff2
   Maple Mono v7.9, SIL Open Font License 1.1 (maple-mono-LICENSE.txt).
   https://github.com/subframe7536/maple-font/releases/tag/v7.9, MapleMono-Woff2.zip, renamed.
 
-huiwen-mincho.woff2
+huiwen-mincho.subset.woff2
   Huiwen Mincho, improved (汇文明朝体 符号修正版), release 20241203, CC0 1.0 (huiwen-mincho-LICENSE.txt).
   https://github.com/bosswnx/huiwenmincho-improved, based on 汇文明朝体 by 特里王.
-  Downloaded only on pages that contain Chinese or Japanese characters.
+  The build keeps only the characters the site uses (scripts/subset-fonts.mjs).
