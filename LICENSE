@@ -15,9 +15,9 @@ without permission:
 
 If you fork this project, replace them with your own.
 
-Third-party files keep their own licenses: the Symbols Nerd Font in
-public/fonts (MIT, see public/fonts/nerd-symbols-LICENSE.txt) and the
-Oh My Posh theme files (*.omp.json), which come from their original authors.
+Third-party files keep their own licenses: the fonts in public/fonts, the
+Oh My Posh themes 1_shell and if_tea, and the Tokyo Night palette used by
+the storm theme. See THIRD-PARTY-NOTICES.md.
 
 Code: MIT License
 -----------------

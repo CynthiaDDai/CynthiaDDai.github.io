@@ -28,7 +28,7 @@ These owner-requested changes supersede the version 1 interactions described bel
 - `ssh` lists configured friend links; `ssh <alias>` opens the configured website. Google is the requested proof of concept.
 - The `history` command is removed. Arrow-key recall of recent commands remains available.
 
-The implementation and README describe the current version. The remainder records the original design.
+The implementation and the guides in `docs/` describe the current version. The remainder records the original design.
 
 ---
 
