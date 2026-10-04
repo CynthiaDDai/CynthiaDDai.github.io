@@ -17,6 +17,8 @@ concurrency:
 
 jobs:
   build:
+    # <user>.github.io repositories deploy; others (the template, custom domains) only with the variable DEPLOY_PAGES=true.
+    if: endsWith(github.repository, '.github.io') || vars.DEPLOY_PAGES == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

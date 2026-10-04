@@ -26,7 +26,7 @@ The server should answer `/blog/first-post` with `blog/first-post.html` without 
 
 ## GitHub Pages
 
-The repository includes `.github/workflows/deploy.yml`, which builds and publishes the site on every push to `main`.
+The repository includes `.github/workflows/deploy.yml`, which builds and publishes the site on every push to `main`. It runs in repositories named `<user>.github.io`; in any other repository, it runs only when the repository variable `DEPLOY_PAGES` is `true`, so the template itself never tries to publish.
 
 1. Name the repository `<user>.github.io`, or plan to use a custom domain (see below).
 2. Push the project to GitHub.
@@ -46,7 +46,7 @@ The separate `ci.yml` workflow runs the test suites on every push and pull reque
 3. Once the certificate is issued, tick **Enforce HTTPS**.
 4. Run the workflow again, so the build uses the new address.
 
-With a custom domain, the repository can have any name.
+With a custom domain, the repository can have any name. If it isn't `<user>.github.io`, also add the variable `DEPLOY_PAGES` with the value `true` under **Settings → Secrets and variables → Actions → Variables**.
 
 ## Other static hosts
 

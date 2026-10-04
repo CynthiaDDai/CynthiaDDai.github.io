@@ -1,8 +1,17 @@
 # Getting started
 
-This guide takes a fresh copy of the project to a published website. Each step ends with a way to check that it worked.
+This guide takes you from the template to your own published website. Each step ends with a way to check that it worked.
 
 You need Node.js 22.12 or newer and Git. Nix is optional; see [Development](development.md#nixos) if you use NixOS.
+
+## Get your own copy
+
+On GitHub, open [the template](https://github.com/CynthiaDDai/terminal-website) and click **Fork**. In your fork, open **Settings → General** and rename it to `<your-user>.github.io`, the name GitHub Pages uses for a personal site. Then clone it:
+
+```sh
+git clone https://github.com/<your-user>/<your-user>.github.io.git
+cd <your-user>.github.io
+```
 
 ## 1. Run the site locally
 
@@ -107,13 +116,29 @@ It prints the address, or refuses placeholder and local addresses such as `https
 
 The simplest route is GitHub Pages:
 
-1. Push the project to a GitHub repository named `<your-user>.github.io`.
+1. Make sure the repository is named `<your-user>.github.io` (see [Get your own copy](#get-your-own-copy)).
 2. In the repository, open Settings → Pages and set Source to **GitHub Actions**.
 3. Push to `main`. The included workflow builds and publishes the site.
 
 **Check:** the Actions tab shows a green "Deploy to GitHub Pages" run, and `https://<your-user>.github.io` shows your site.
 
 The site must be served from the root of a domain, so a repository with any other name needs a custom domain. [Deploying](deploying.md) covers custom domains, other static hosts and NixOS with Caddy.
+
+## Keep up with the template
+
+Improvements to the template can be merged into your site at any time. On GitHub, the **Sync fork** button on your repository does it. From the command line, add the template once:
+
+```sh
+git remote add template https://github.com/CynthiaDDai/terminal-website.git
+```
+
+and then, whenever you want the latest version:
+
+```sh
+git pull template main
+```
+
+The template changes code, styles and docs; your changes are mostly in `src/content/`, `src/config/` and `public/`, so the two rarely touch the same lines. If Git reports a conflict in a sample page you have deleted or a setting you have changed, keep your version.
 
 ## Where to go next
 
