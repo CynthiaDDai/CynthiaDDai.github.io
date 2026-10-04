@@ -2,6 +2,7 @@
 title: About
 description: Who I am, what I do and contact.
 order: 10
+motto: 雪泥鸿爪
 ---
 
 ## Who Am I?

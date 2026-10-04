@@ -11,14 +11,39 @@
   },
   "caption": ":3",
   "homeFooter": [
-    "algebraic geometry",
-    "cats",
-    "video games"
+    {
+      "text": "algebraic geometry",
+      "motto": "横岭侧峰"
+    },
+    {
+      "text": "cats",
+      "motto": "衔蝉入梦"
+    },
+    {
+      "text": "video games",
+      "motto": "杯中沧海"
+    }
   ],
-  "pageFooter": "Take your time.",
+  "pageFooter": [
+    "莫听穿林打叶声，何妨吟啸且徐行。—— 苏轼《定风波》",
+    "人间有味是清欢。—— 苏轼《浣溪沙》",
+    "一蓑烟雨任平生。—— 苏轼《定风波》",
+    "休将白发唱黄鸡。—— 苏轼《浣溪沙》",
+    "我见青山多妩媚，料青山见我应如是。—— 辛弃疾《贺新郎》",
+    "稻花香里说丰年，听取蛙声一片。—— 辛弃疾《西江月》",
+    "少年心事当拏云。—— 李贺《致酒行》",
+    "天若有情天亦老。—— 李贺《金铜仙人辞汉歌》"
+  ],
   "notFound": {
     "title": "A path less travelled.",
-    "description": "There isn’t a page at this address."
+    "description": "There isn’t a page at this address.",
+    "motto": "迷魂难招",
+    "quote": "我有迷魂招不得，雄鸡一声天下白。—— 李贺《致酒行》"
+  },
+  "mottos": {
+    "index": "灯火阑珊",
+    "search": "众里寻他",
+    "toc": "栏杆拍遍"
   },
   "lang": "en",
   "dateLocale": "en-CA",

@@ -2,6 +2,7 @@
 title: Notes
 description: Notes I have taken in the past.
 order: 50
+motto: 寻章摘句
 ---
 
 [Algebraic Stacks](/notes/stack.pdf)
