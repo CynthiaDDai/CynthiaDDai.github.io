@@ -1,0 +1,55 @@
+---
+import '../styles/tokens.css';
+import '../styles/chrome.css';
+import '../styles/terminal.css';
+import '../styles/prose.css';
+import 'katex/dist/katex.min.css';
+import { themes, defaultTheme, themeTokens } from '../lib/theme/registry';
+import { getSiteIndex } from '../lib/navigation/site-index';
+import { pathFromUrl } from '../lib/navigation/filesystem';
+import { site } from '../config';
+import SiteSearch from '../components/shell/SiteSearch.astro';
+import { fastfetch } from '../lib/theme/fastfetch-config';
+import MobilePanels from '../components/shell/MobilePanels.astro';
+import '../styles/mobile.css';
+interface Props { title?: string; description?: string; home?: boolean; homeContent?: boolean; article?: boolean; }
+const { title, description = site.description, home = false, homeContent = false, article = false } = Astro.props;
+const path = pathFromUrl(Astro.url.pathname);
+const entries = await getSiteIndex();
+const cssTokens = (tokens: Record<string, string>) => Object.entries(tokens).map(([key, value]) => `${key}:${value}`).join(';');
+const themeCss = themes.map(theme => `[data-theme="${theme.id}"]{${cssTokens(themeTokens(theme))};color-scheme:${theme.mode}}` +
+  (theme.mobile ? `@media(max-width:700px),(pointer:coarse){[data-theme="${theme.id}"]{${cssTokens(theme.mobile.tokens)};color-scheme:${theme.mobile.mode}}}` : '')).join('\n');
+const bootstrap = JSON.stringify(themes.map(theme => ({ id: theme.id, mode: theme.mode }))).replaceAll('<', '\\u003c');
+const pageTitle = title ? `${title} · ${site.owner}` : site.name;
+const canonical = new URL(path, Astro.site);
+---
+<!doctype html>
+<html lang={site.lang} data-theme={defaultTheme.id} data-mode={defaultTheme.mode}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title={site.name} href="/rss.xml" />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.name} />
+    <meta name="color-scheme" content="dark light" />
+    <style is:inline set:html={themeCss} />
+    <script is:inline set:html={`try{const themes=${bootstrap};const selected=themes.find(t=>t.id===localStorage.getItem('site-theme'));if(selected){document.documentElement.dataset.theme=selected.id;document.documentElement.dataset.mode=selected.mode;}}catch{}`} />
+  </head>
+  <body class:list={[home && 'home-page', homeContent && 'home-content']}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot />
+    <SiteSearch />
+    <MobilePanels path={path} />
+    <script id="site-data" type="application/json" is:inline set:html={JSON.stringify({ entries, path, site, fastfetch }).replaceAll('<', '\\u003c')} />
+    <script>
+      import '../scripts/site';
+    </script>
+  </body>
+</html>

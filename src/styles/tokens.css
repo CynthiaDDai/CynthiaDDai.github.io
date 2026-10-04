@@ -1,0 +1,25 @@
+:root {
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --font-prose: 'Charter', 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, serif;
+  --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --measure: 70ch;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
+body { margin: 0; background: var(--site-bg); color: var(--site-fg); font-family: var(--font-ui); min-height: 100svh; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: .25em; }
+button, input, textarea, summary { font: inherit; }
+button { color: inherit; cursor: pointer; }
+button, input, textarea { border-radius: 0; }
+button { background: none; }
+button:disabled { cursor: default; }
+::selection { background: var(--chrome-accent); color: var(--site-bg); }
+:focus-visible { outline: 2px solid var(--chrome-accent); outline-offset: 5px; }
+[tabindex='-1']:focus { outline: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.skip-link { position: fixed; top: 1rem; left: 1rem; z-index: 100; padding: .8rem 1rem; background: var(--site-bg); color: var(--site-fg); border: 1px solid var(--chrome-accent); transform: translateY(-200%); }
+.skip-link:focus { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  html { scroll-behavior: auto; }
+}

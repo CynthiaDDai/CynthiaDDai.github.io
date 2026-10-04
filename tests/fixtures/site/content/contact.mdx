@@ -1,0 +1,14 @@
+---
+title: Contact
+description: A conversation starts somewhere.
+order: 60
+---
+
+import site from '@site/profile';
+
+{site.email && <p><a className="contact-link" href={`mailto:${site.email}`}>{site.email} ↗</a></p>}
+{site.github && <p><a href={site.github}>Find me on GitHub ↗</a></p>}
+{site.socials.map(link => <p><a href={link.url} target="_blank" rel="noopener noreferrer">{link.name} ↗</a></p>)}
+{!site.email && !site.github && !site.socials.length && <p>Public contact details haven’t been added yet. Check back when this site is ready to launch.</p>}
+
+In the meantime, you can explore the [projects](/projects) or read the [notes](/notes).

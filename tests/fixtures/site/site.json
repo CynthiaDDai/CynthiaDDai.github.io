@@ -1,0 +1,52 @@
+{
+  "name": "Cynthia's space",
+  "owner": "Cynthia",
+  "user": "cynthia",
+  "host": "website",
+  "description": "A quiet place for writing, projects, and things worth remembering.",
+  "bio": "Writing, building, and thinking.",
+  "wordmark": {
+    "name": "cynthia",
+    "suffix": "’s space"
+  },
+  "caption": "a personal space",
+  "homeFooter": [
+    "writing",
+    "building",
+    "thinking"
+  ],
+  "pageFooter": "Take your time.",
+  "notFound": {
+    "title": "A path less travelled.",
+    "description": "There isn’t a page at this address."
+  },
+  "lang": "en",
+  "dateLocale": "en-CA",
+  "feed": [
+    "/blog",
+    "/research"
+  ],
+  "email": "hello@placeholder.test",
+  "github": "https://github.com/placeholder-cynthia",
+  "socials": [
+    {
+      "name": "Mastodon",
+      "url": "https://social.placeholder.test/@cynthia"
+    }
+  ],
+  "friends": [
+    {
+      "alias": "google",
+      "name": "Google",
+      "url": "https://www.google.com",
+      "description": "Demo connection"
+    },
+    {
+      "alias": "placeholder-friend",
+      "name": "Placeholder friend",
+      "url": "https://friend.placeholder.test",
+      "description": "Dummy connection for testing"
+    }
+  ],
+  "activityLimit": 3
+}

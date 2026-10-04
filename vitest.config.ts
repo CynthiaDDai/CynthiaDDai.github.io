@@ -1,0 +1,4 @@
+import { resolve } from 'node:path';
+import { defineConfig } from 'vitest/config';
+import { themeCatalogPlugin } from './scripts/theme-discovery.mjs';
+export default defineConfig({ plugins: [themeCatalogPlugin()], resolve: { alias: { '@site/profile': resolve('tests/fixtures/site/site.json') } }, test: { include: ['tests/unit/**/*.test.ts'] } });

@@ -1,0 +1,13 @@
+---
+import type { SiteEntry } from '../../lib/navigation/filesystem';
+interface Props { entries: SiteEntry[]; }
+const { entries } = Astro.props;
+---
+<ol class="content-list">
+  {entries.map(entry => <li>
+    <a class="content-link" href={entry.path}>
+      <div class="content-list-meta">{entry.date && <time datetime={entry.date}>{entry.date.slice(0, 10)}</time>}{entry.example && <span>example</span>}</div>
+      <div class="content-list-copy"><h2>{entry.title}<span aria-hidden="true">↗</span></h2><p>{entry.description}</p>{entry.tags.length > 0 && <span class="content-tags">{entry.tags.join(' / ')}</span>}</div>
+    </a>
+  </li>)}
+</ol>

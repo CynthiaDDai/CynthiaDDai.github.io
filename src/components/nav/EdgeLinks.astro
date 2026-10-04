@@ -1,0 +1,8 @@
+---
+import { listChildren } from '../../lib/navigation/filesystem';
+import { getSiteIndex } from '../../lib/navigation/site-index';
+const navigation = listChildren('/', await getSiteIndex());
+---
+<p class="nav-directory">~/</p>
+{navigation.filter(entry => entry.path !== '/').map((entry, index) =>
+  <a href={entry.path}><span class="nav-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><span>{entry.path.slice(1)}{entry.kind === 'directory' ? '/' : ''}</span><span class="nav-arrow" aria-hidden="true">↗</span></a>)}

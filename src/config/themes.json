@@ -1,0 +1,13 @@
+{
+  "default": "storm",
+  "order": [
+    "storm",
+    "storm_day",
+    "paper"
+  ],
+  "fallback": {
+    "web": {},
+    "mobile": "compact",
+    "invalidCompanion": "fallback"
+  }
+}

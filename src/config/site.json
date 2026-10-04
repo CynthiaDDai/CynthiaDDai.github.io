@@ -1,0 +1,33 @@
+{
+  "name": "Meow-thematics",
+  "owner": "Cynthia Dai",
+  "user": "cynthia",
+  "host": "meow-thematics",
+  "description": "Cynthia Dai — PhD student in algebraic geometry at the University of Waterloo. Notes, teaching materials and seminars.",
+  "bio": "PhD student in algebraic geometry at the University of Waterloo. :3",
+  "wordmark": {
+    "name": "meow",
+    "suffix": "-thematics"
+  },
+  "caption": ":3",
+  "homeFooter": [
+    "algebraic geometry",
+    "cats",
+    "video games"
+  ],
+  "pageFooter": "Take your time.",
+  "notFound": {
+    "title": "A path less travelled.",
+    "description": "There isn’t a page at this address."
+  },
+  "lang": "en",
+  "dateLocale": "en-CA",
+  "feed": [
+    "/seminars"
+  ],
+  "email": "",
+  "github": "https://github.com/CynthiaDDai",
+  "socials": [],
+  "friends": [],
+  "activityLimit": 3
+}

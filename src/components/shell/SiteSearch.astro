@@ -1,0 +1,13 @@
+<dialog id="site-search" class="site-search" aria-labelledby="search-title">
+  <div class="search-heading">
+    <h2 id="search-title">Search this space</h2>
+    <button type="button" class="quiet-button" data-close-search aria-label="Close site search"><span class="desktop-search-copy">esc </span><span aria-hidden="true">×</span></button>
+  </div>
+  <form data-search-form role="search">
+    <label class="sr-only" for="site-search-input">Search the website</label>
+    <div class="search-input-line"><span aria-hidden="true"><span class="desktop-search-copy">s</span><span class="mobile-search-copy">⌕</span></span><input id="site-search-input" type="search" autocomplete="off" spellcheck="false" enterkeyhint="search" placeholder="A word, an idea, a page…" aria-describedby="search-hint" /><button type="submit" class="quiet-button" aria-label="Open first search result">↵</button></div>
+  </form>
+  <p class="search-hint" id="search-hint"><span class="desktop-search-copy">Titles, tags, and everything you’ve read here. Enter opens the first result.</span><span class="mobile-search-copy">Search titles, tags, and page text. Tap a result to open it.</span></p>
+  <p class="search-status" data-search-status role="status">Start typing to search the whole site.</p>
+  <div class="search-results" data-search-results></div>
+</dialog>

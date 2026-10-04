@@ -1,0 +1,36 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import TopNav from '../components/nav/TopNav.astro';
+import CommandBar from '../components/shell/CommandBar.astro';
+import type { MarkdownHeading } from 'astro';
+import { normalizePath, pathFromUrl } from '../lib/navigation/filesystem';
+import { site } from '../config';
+interface Props {
+  title: string; description: string; date?: Date; updated?: Date; tags: string[];
+  example?: boolean; headings: MarkdownHeading[]; parentTitle: string; status?: string; repo?: string; demo?: string;
+}
+const { title, description, date, updated, tags, example, headings, parentTitle, status, repo, demo } = Astro.props;
+const path = pathFromUrl(Astro.url.pathname);
+const parentPath = normalizePath('..', path);
+const toc = headings.filter(heading => heading.depth === 2);
+const formatDate = (value: Date) => value.toLocaleDateString(site.dateLocale, { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+---
+<BaseLayout title={title} description={description} article>
+  <TopNav path={path} />
+  <main id="main" class="article-main" tabindex="-1">
+    <CommandBar path={path} />
+    <article>
+      <header class="article-heading">
+        <h1>{title}</h1>
+        {description && <p class="article-deck">{description}</p>}
+        <div class="article-meta">{date && <time datetime={date.toISOString()}>{formatDate(date)}</time>}{status && <span class="status">{status}</span>}{example && <span class="example-label">Example content</span>}</div>
+        {tags.length > 0 && <ul class="tag-list" aria-label="Tags">{tags.map(tag => <li>{tag}</li>)}</ul>}
+        {(repo || demo) && <div class="project-links">{repo && <a href={repo}>Source code ↗</a>}{demo && <a href={demo}>Visit project ↗</a>}</div>}
+      </header>
+      {toc.length >= 2 && <details class="toc"><summary>On this page</summary><nav aria-label="Table of contents"><ol>{toc.map(heading => <li><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ol></nav></details>}
+      <div class="prose"><slot /></div>
+      {updated && <p class="updated">Updated <time datetime={updated.toISOString()}>{formatDate(updated)}</time></p>}
+    </article>
+    <div class="article-bottom"><a href={parentPath}>← Back to {parentTitle}</a><a href="#main">Back to top ↑</a></div>
+  </main>
+</BaseLayout>

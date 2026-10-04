@@ -1,0 +1,12 @@
+---
+import { breadcrumbs } from '../../lib/navigation/filesystem';
+interface Props { path: string; }
+const { path } = Astro.props;
+---
+<nav class="mobile-location" aria-label="Current location">
+  {breadcrumbs(path).map((part, index, all) => <Fragment>
+    {index > 0 && <span aria-hidden="true">/</span>}
+    <a href={part.path} aria-current={index === all.length - 1 ? 'page' : undefined}>{part.label}</a>
+  </Fragment>)}
+  {path === '/' && <span aria-hidden="true">/</span>}
+</nav>
