@@ -1,0 +1,40 @@
+{
+  "name": "Ada's space",
+  "owner": "Ada",
+  "user": "ada",
+  "host": "website",
+  "description": "A quiet place for writing, projects, and things worth remembering.",
+  "bio": "Writing, building, and thinking.",
+  "wordmark": {
+    "name": "ada",
+    "suffix": "’s space"
+  },
+  "caption": "a personal space",
+  "homeFooter": [
+    "writing",
+    "building",
+    "thinking"
+  ],
+  "pageFooter": "Take your time.",
+  "notFound": {
+    "title": "A path less travelled.",
+    "description": "There isn’t a page at this address."
+  },
+  "lang": "en",
+  "dateLocale": "en-CA",
+  "feed": [
+    "/blog"
+  ],
+  "email": "",
+  "github": "",
+  "socials": [],
+  "friends": [
+    {
+      "alias": "astro",
+      "name": "Astro",
+      "url": "https://astro.build",
+      "description": "The framework behind this site"
+    }
+  ],
+  "activityLimit": 3
+}

@@ -1,0 +1,22 @@
+---
+import { renderPrompt } from '../../lib/theme/prompt-renderer';
+import { defaultTheme } from '../../lib/theme/registry';
+import { site } from '../../config';
+import { virtualPath, breadcrumbs } from '../../lib/navigation/filesystem';
+import { mobilePrompt } from '../../lib/theme/mobile';
+interface Props { path: string; id: string; mobile?: boolean; }
+const { path, id, mobile = false } = Astro.props;
+const lines = renderPrompt(mobile ? mobilePrompt(defaultTheme) : defaultTheme.terminal, { user: site.user, host: site.host, cwd: virtualPath(path), status: 'ok', pathLinks: breadcrumbs(path) });
+---
+<form class={mobile ? 'mobile-command-form' : 'command-form'} data-command-form autocomplete="off">
+  <div class="prompt" data-prompt>
+    {lines.slice(0, -1).map(line => <div class:list={['prompt-line', line.alignment]} set:html={line.html} />)}
+  </div>
+  <div class="prompt-input-line">
+    <span class="prompt-tail" data-prompt-tail set:html={lines.at(-1)?.html} />
+    <label class="sr-only" for={id}>{mobile ? 'Custom command' : 'Site command'}</label>
+    <textarea id={id} class={mobile ? 'command-input mobile-command-input' : 'command-input'} name="command" rows="1" spellcheck="false" autocapitalize="off" enterkeyhint="go" placeholder="type a command" aria-describedby={`${id}-hint`} aria-controls={`${id}-completions`}></textarea>
+    <button class="run-command" type="submit" aria-label="Run command">↵</button>
+  </div>
+  <span class="sr-only" id={`${id}-hint`}>Type help for commands. Enter runs the command. {path === '/' && 'Arrow keys recall recent commands.'} Tab completes commands and paths. Shift+Tab or Escape leaves the input. Press colon anywhere outside a text field to focus this command line; s opens site search.</span>
+</form>

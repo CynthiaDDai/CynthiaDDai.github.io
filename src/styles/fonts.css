@@ -1,0 +1,26 @@
+/* Every font on the site is set in this file.
+   A font list is tried character by character: a character the first font lacks falls through to the next.
+   So Latin text uses the first font, and Chinese or Japanese text falls through to --font-cjk (system fonts by default).
+   Font files live in public/fonts; a face with a unicode-range is only downloaded when a page uses those characters. */
+
+:root {
+  --font-cjk: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC';
+  --font-mono: 'Maple Mono', var(--font-cjk), 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --font-prose: 'Charter', 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, var(--font-cjk), serif;
+  --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', var(--font-cjk), sans-serif;
+}
+
+/* Maple Mono (OFL-1.1): terminal, prompts, commands and code. */
+@font-face { font-family: 'Maple Mono'; src: url('/fonts/maple-mono-regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Maple Mono'; src: url('/fonts/maple-mono-italic.woff2') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Maple Mono'; src: url('/fonts/maple-mono-medium.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Maple Mono'; src: url('/fonts/maple-mono-semibold.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Maple Mono'; src: url('/fonts/maple-mono-bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+
+/* Symbols Nerd Font Mono (MIT): private-use icons in prompts. */
+@font-face {
+  font-family: 'Nerd Symbols';
+  src: url('/fonts/nerd-symbols-mono.woff2') format('woff2');
+  font-display: swap;
+  unicode-range: U+E000-F8FF, U+F0000-FFFFD, U+100000-10FFFD;
+}

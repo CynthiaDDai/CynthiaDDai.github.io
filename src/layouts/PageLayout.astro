@@ -1,0 +1,23 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import TopNav from '../components/nav/TopNav.astro';
+import CommandBar from '../components/shell/CommandBar.astro';
+import { site } from '../config';
+import { pathFromUrl } from '../lib/navigation/filesystem';
+interface Props { title: string; description?: string; eyebrow?: string; wide?: boolean; }
+const { title, description, eyebrow, wide = false } = Astro.props;
+const path = pathFromUrl(Astro.url.pathname);
+---
+<BaseLayout title={title} description={description}>
+  <TopNav path={path} />
+  <main id="main" class:list={['page-main', wide && 'wide']} tabindex="-1">
+    <CommandBar path={path} />
+    <div class="page-intro">
+      {eyebrow && !eyebrow.startsWith('~/') && <p class="eyebrow">{eyebrow}</p>}
+      <h1>{title}</h1>
+      {description && <p class="page-description">{description}</p>}
+    </div>
+    <slot />
+  </main>
+  <footer class="page-footer"><a href="/">~ / {site.wordmark.name}</a><span>{site.pageFooter}</span><a href="/rss.xml">RSS ↗</a></footer>
+</BaseLayout>

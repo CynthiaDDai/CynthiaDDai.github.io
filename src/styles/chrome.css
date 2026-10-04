@@ -1,0 +1,89 @@
+.quiet-button { border: 0; padding: .6rem; color: var(--site-muted); }
+.quiet-button:hover { color: var(--site-fg); }
+.home-header, .home-footer { font-family: var(--font-mono); display: flex; align-items: center; justify-content: space-between; padding: 2.4rem 3.3rem; font-size: .75rem; letter-spacing: .015em; color: var(--site-muted); }
+.home-wordmark { text-decoration: none; color: var(--site-fg); font-size: .9rem; }
+.home-wordmark > span { color: var(--site-muted); }
+.home-wordmark .wordmark-path { color: var(--terminal-accent-1); }
+.home-page { display: flex; flex-direction: column; height: 100dvh; overflow: hidden; }
+.home-page.home-content { height: auto; min-height: 100dvh; overflow: visible; }
+.home-content .terminal-stage { min-height: 70vh; flex-shrink: 0; }
+.home-header, .home-footer { flex-shrink: 0; }
+.home-footer { margin-top: auto; width: 100%; gap: 1rem; }
+.home-footer > span > span { margin: 0 .55em; color: var(--terminal-accent-1); }
+.theme-footer { border: 0; display: inline-flex; align-items: center; gap: .75rem; color: var(--site-muted); padding: .5rem 0; }
+.theme-swatch { height: .55rem; width: .55rem; border-radius: 50%; background: var(--terminal-accent-1); box-shadow: .25rem 0 0 var(--terminal-accent-2); }
+.edge-navigation { position: fixed; right: 0; top: 50%; transform: translateY(-50%); z-index: 10; font-family: var(--font-mono); }
+.edge-menu { position: relative; }
+.edge-handle { border: 0; cursor: pointer; position: absolute; right: 0; top: 50%; transform: translateY(-50%); height: 160px; width: 48px; display: flex; justify-content: center; align-items: center; gap: 1rem; flex-direction: column; color: var(--site-muted); }
+.mobile-nav > summary::-webkit-details-marker { display: none; }
+.edge-handle::before { content: ''; width: 1px; height: 160px; background: var(--chrome-accent); opacity: .35; position: absolute; right: 12px; }
+.edge-label { font-size: .7rem; writing-mode: vertical-rl; letter-spacing: .15em; }
+.edge-mark { color: var(--chrome-accent); }
+.edge-navigation nav { width: 230px; background: var(--site-bg); padding: 1.5rem 2.8rem 1.5rem 1.5rem; border-left: 1px solid var(--chrome-border); }
+.edge-navigation nav a { display: flex; align-items: center; gap: .75rem; padding: .65rem 0; color: var(--site-muted); text-decoration: none; font-size: .85rem; }
+.edge-navigation nav a:hover { color: var(--terminal-cyan); }
+.edge-navigation nav a[aria-current] { color: var(--terminal-accent-1); }
+/* Until a visitor first opens the index, the handle twitches once a few seconds after load. */
+@keyframes edge-nudge { 0%, 50%, 100% { translate: 0; } 25%, 75% { translate: -3px 0; } }
+.edge-navigation.nudge .edge-handle { animation: edge-nudge .8s ease-in-out 3s; }
+@media (prefers-reduced-motion: reduce) { .edge-navigation.nudge .edge-handle { animation: none; } }
+.nav-directory { color: var(--terminal-accent-1); margin: 0 0 .9rem; font-size: 1.05rem; }
+.nav-number { font-size: .65rem; }
+.nav-arrow { margin-left: auto; color: var(--terminal-accent-1); }
+@media (min-width: 701px) and (pointer: fine) {
+  .edge-menu > nav { visibility: hidden; opacity: 0; transform: translateX(15px); transition: opacity .18s ease, transform .18s ease, visibility .18s; }
+  .edge-menu:hover > nav, .edge-menu:focus-within > nav, .edge-menu.is-expanded > nav { visibility: visible; opacity: 1; transform: none; }
+}
+.top-nav { max-width: 1320px; margin: auto; display: flex; align-items: center; min-height: 100px; padding: 1.5rem 3rem; gap: 2rem; font-family: var(--font-mono); font-size: .78rem; }
+.site-wordmark { flex: 1; min-width: 0; text-decoration: none; font-size: .9rem; }
+.site-wordmark span { color: var(--site-muted); }
+.path-separator { color: var(--site-muted); }
+.nav-actions { display: flex; align-items: center; gap: .6rem; }
+.theme-button { display: inline-flex; padding: .8rem 1.05rem .8rem .8rem; }
+.theme-button .theme-swatch { transition: transform .15s ease; }
+.theme-button:hover .theme-swatch, .theme-button:focus-visible .theme-swatch { transform: scale(1.25); }
+.mobile-nav { display: none; }
+.page-main { width: min(100% - 3rem, 760px); margin: 3rem auto 8rem; min-height: 50vh; }
+.page-main.wide { max-width: 880px; width: min(100% - 3rem, 880px); }
+.page-intro { margin-bottom: 3.5rem; }
+.eyebrow { font-family: var(--font-mono); font-size: .75rem; color: var(--terminal-accent-1); margin-bottom: 1.5rem; }
+h1 { font-size: clamp(2.35rem, 4.3vw, 3.9rem); font-weight: 500; line-height: 1.15; letter-spacing: -.045em; margin: 0 0 1.4rem; text-wrap: balance; }
+.page-description { color: var(--site-muted); line-height: 1.6; font-size: 1.1rem; max-width: 55ch; }
+/* A group heading is a rule with the name and count set into it: ── Publications · 2 ────── */
+.content-group { display: flex; align-items: center; gap: .6rem; margin: 3.5rem 0 1.6rem; font-family: var(--font-mono); font-size: .9rem; font-weight: 400; letter-spacing: .02em; color: var(--terminal-accent-1); }
+.content-group::before { content: '──' / ''; }
+.content-group::after { content: ''; flex: 1; border-top: 1px solid color-mix(in srgb, currentColor 45%, transparent); }
+.content-group-count { color: var(--site-muted); }
+/* Every listed entry and file card is a prompt for that item, drawn by the current theme's transient prompt.
+   Its title link covers it; any other links sit above. */
+.prompt-card { position: relative; font-family: var(--font-mono); font-size: .82rem; border-radius: 4px; }
+.card-prompt { color: var(--terminal-fg); font-size: 1.15em; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; }
+.card-title-text { color: var(--site-fg); font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .25em; }
+.card-command { margin-left: .5ch; }
+.card-title { margin: 0; font: inherit; }
+.card-link { position: absolute; inset: -.4rem -.6rem; font-size: 0; color: transparent; border-radius: 4px; }
+.card-link:hover { background: color-mix(in srgb, var(--site-fg) 5%, transparent); }
+.prompt-card p.card-name, .prompt-card p.card-description, .prompt-card p.card-output { margin: .1rem 0 0 1.05rem; font-family: var(--font-mono); font-size: inherit; line-height: 1.7; }
+.prompt-card p.card-name { color: var(--site-fg); }
+.prompt-card p.card-description { color: var(--site-muted); }
+.prompt-card p.card-output { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; margin-top: .35rem; color: var(--site-muted); font-size: .78rem; }
+.card-description a { position: relative; z-index: 1; }
+.card-action:any-link { position: relative; z-index: 1; font-family: var(--font-mono); font-size: inherit; color: var(--prose-link); text-decoration: none; white-space: nowrap; }
+.card-action::before, .card-action::after { display: inline-block; white-space: pre; }
+.card-action::before { content: '[ ' / ''; color: var(--site-muted); }
+.card-action::after { content: ' ]' / ''; color: var(--site-muted); }
+.card-action:any-link:hover, .card-action:any-link:focus-visible { text-decoration: underline; text-underline-offset: .25em; }
+.content-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.6rem; }
+.page-footer { width: min(100% - 3rem, 1100px); margin: 0 auto; padding: 2rem 0; border-top: 1px solid var(--chrome-border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; font-family: var(--font-mono); font-size: .7rem; color: var(--site-muted); }
+.page-footer a { text-decoration: none; }
+.noscript-note { position: fixed; bottom: 5rem; left: 1.5rem; right: 1.5rem; text-align: center; font-size: .85rem; color: var(--site-muted); }
+/* Keep the text clear of the index handle on narrow desktop windows. */
+@media (min-width: 701px) and (max-width: 1000px) and (pointer: fine) {
+  .page-main, .page-main.wide, .article-main { width: min(100% - 8rem, 760px); }
+}
+@media (max-width: 850px) {
+  .top-nav { padding: 1.5rem; gap: 1rem; }
+}
+@media (max-width: 700px), (pointer: coarse) {
+  .page-footer > span { display: none; }
+}

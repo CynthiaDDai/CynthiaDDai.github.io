@@ -1,0 +1,31 @@
+---
+title: "Paths have parents"
+description: "A small rule that keeps shell navigation and browser navigation in agreement."
+date: 2026-10-03
+tags: [navigation, implementation]
+---
+
+A website route can be a directory in a navigation model without pretending to be a real filesystem.
+
+For this site, `..` removes one segment of the current route. An absolute path starts at `/`, and a virtual path starts at `~`. Going above the root stays at the root.
+
+```typescript
+const parts = currentPath.split('/').filter(Boolean);
+parts.pop();
+const parent = '/' + parts.join('/');
+```
+
+The important second step is validation. Resolving a path does not create a page: the resolved URL must exist in the site index before a command navigates there.
+
+For a path with $n$ segments, one parent step leaves $\max(0, n - 1)$ segments. The root remains the root.
+
+<aside aria-label="Implementation note" style={{ borderLeft: '2px solid var(--chrome-accent)', paddingLeft: '1.2rem', marginTop: '2rem' }}>
+  This note uses MDX for a small semantic aside. Ordinary posts can stay in Markdown.
+</aside>
+
+| Input | Current route | Destination |
+| --- | --- | --- |
+| `..` | `/blog/the-shape-of-attention` | `/blog` |
+| `~/projects` | `/blog` | `/projects` |
+| `../..` | `/notes/paths-have-parents` | `/` |
+| `-` | Any route | Previous site route, when available |

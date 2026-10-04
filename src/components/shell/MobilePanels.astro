@@ -1,0 +1,33 @@
+---
+import { commands } from '../../lib/terminal/registry';
+import { themes } from '../../lib/theme/registry';
+import Prompt from './Prompt.astro';
+import MobilePath from '../nav/MobilePath.astro';
+interface Props { path: string; }
+const { path } = Astro.props;
+---
+<dialog id="mobile-command-panel" class="touch-panel" aria-labelledby="mobile-command-title" data-mobile-shell>
+  <header class="touch-panel-heading"><h2 id="mobile-command-title">Command</h2><button type="button" class="quiet-button" data-close-panel aria-label="Close commands" autofocus><span aria-hidden="true">×</span></button></header>
+  <div class="touch-panel-content">
+    <div class="mobile-command-path"><MobilePath path={path} /></div>
+    <div class="mobile-command-options">
+      {commands.filter(command => command.touchShortcut).map(command => <button type="button" class="mobile-row" data-command={command.name}><span><strong>{command.name}</strong><small>{command.description}</small></span><span class="mobile-arrow" aria-hidden="true">↵</span></button>)}
+    </div>
+    <section class="mobile-output" data-mobile-output hidden>
+      <header><h3 data-mobile-output-title>Result</h3><button type="button" class="quiet-button" data-command="clear" aria-label="Clear command result">Clear <span aria-hidden="true">×</span></button></header>
+      <div class="transcript" data-mobile-transcript role="region" aria-label="Command result" aria-live="polite" tabindex="0"></div>
+    </section>
+    <details class="mobile-manual-command" data-manual-command>
+      <summary>Type a command <span aria-hidden="true">+</span></summary>
+      <Prompt path={path} id="mobile-custom-command" mobile />
+      <div class="completions" id="mobile-custom-command-completions" data-mobile-completions aria-live="polite"></div>
+      <button type="button" class="mobile-complete" data-complete-command>Complete command or path</button>
+    </details>
+  </div>
+</dialog>
+<dialog id="mobile-theme-panel" class="touch-panel" aria-labelledby="mobile-theme-title">
+  <header class="touch-panel-heading"><h2 id="mobile-theme-title">Theme</h2><button type="button" class="quiet-button" data-close-panel aria-label="Close themes" autofocus><span aria-hidden="true">×</span></button></header>
+  <div class="touch-panel-content">
+    {themes.map(theme => <button type="button" class="mobile-row mobile-theme-choice" data-select-theme={theme.id} aria-pressed="false"><span class="mobile-palette" style={`--preview-bg:${theme.chrome.background};--preview-fg:${theme.chrome.foreground};--preview-accent:${theme.chrome.accent}`} aria-hidden="true">◐</span><span>{theme.name}</span><span class="mobile-theme-check" aria-hidden="true">✓</span></button>)}
+  </div>
+</dialog>

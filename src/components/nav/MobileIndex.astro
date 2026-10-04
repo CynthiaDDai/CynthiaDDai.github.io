@@ -1,0 +1,35 @@
+---
+import { listChildren, type SiteEntry } from '../../lib/navigation/filesystem';
+import { getSiteIndex } from '../../lib/navigation/site-index';
+import { friends, site } from '../../config';
+import MobileTools from './MobileTools.astro';
+import MobilePath from './MobilePath.astro';
+interface Props { path: string; }
+const { path } = Astro.props;
+const entries: SiteEntry[] = await getSiteIndex();
+const navigation = listChildren('/', entries);
+const recent = entries.filter(entry => entry.date)
+  .sort((a, b) => (b.updated || b.date || '').localeCompare(a.updated || a.date || '') || a.path.localeCompare(b.path))
+  .slice(0, site.activityLimit);
+const connections = friends.filter(friend => {
+  try { return ['http:', 'https:'].includes(new URL(friend.url).protocol); } catch { return false; }
+});
+---
+<div class="mobile-index-body">
+  <div class="mobile-index-path"><MobilePath path={path} /><span>{path === '/' ? 'home' : 'index'}</span></div>
+  <section class="mobile-index-section">
+    <h2>navigate</h2>
+    <nav aria-label="Mobile navigation">
+      {navigation.filter(entry => entry.path !== '/').map(entry => <a class="mobile-row" href={entry.path} aria-current={path === entry.path ? 'page' : path.startsWith(`${entry.path}/`) ? 'location' : undefined}><span>{entry.title}</span><span class="mobile-arrow" aria-hidden="true">→</span></a>)}
+    </nav>
+  </section>
+  <MobileTools />
+  {recent.length > 0 && <section class="mobile-index-section">
+    <h2>recent</h2>
+    {recent.map(entry => <a class="mobile-row" href={entry.path}><span>{entry.title}{entry.example && <small>example</small>}</span><span class="mobile-arrow" aria-hidden="true">→</span></a>)}
+  </section>}
+  {connections.length > 0 && <section class="mobile-index-section">
+    <h2>friends</h2>
+    {connections.map(friend => <a class="mobile-row" href={friend.url} target="_blank" rel="noopener noreferrer"><span>{friend.name}</span><span class="mobile-arrow" aria-hidden="true">↗</span></a>)}
+  </section>}
+</div>

@@ -1,0 +1,35 @@
+---
+import type { ContentNode } from '../../lib/content/tree';
+import { slug } from '../../../scripts/rehype-file-cards.mjs';
+interface Props { entries: ContentNode[]; groups?: Record<string, string>; }
+const { entries, groups } = Astro.props;
+// Groups run from finished to in progress: works in the first are clean, later ones have working changes.
+const sections = groups
+  ? Object.entries(groups).map(([status, heading], index) => ({ heading, git: index === 0 ? '' : 'working', entries: entries.filter(entry => entry.frontmatter.status === status) })).filter(section => section.entries.length)
+  : [{ heading: undefined, git: undefined, entries }];
+const Title = groups ? 'h3' : 'h2';
+const external = (url: string) => /^https?:/.test(url);
+---
+{sections.map(section => <>
+  {section.heading && <h2 class="content-group">{section.heading}<span class="content-group-count" aria-hidden="true">· {section.entries.length}</span></h2>}
+  <ol class="content-list">
+    {section.entries.map(entry => {
+      const { authors, venue, links } = entry.frontmatter;
+      const directory = entry.kind === 'directory';
+      const meta = [entry.date?.slice(0, 10), entry.example && 'example', authors, venue, entry.tags.join(' / ')].filter(Boolean);
+      // Each entry is a prompt for its path (painted by the site script; the text is the no-JavaScript fallback).
+      const name = `${entry.slug}${directory ? '/' : ''}`;
+      return <li class="prompt-card" data-card data-card-name={name} data-card-git={section.git}>
+        <div class="card-prompt" aria-hidden="true">…/{name}</div>
+        <Title class="card-title"><a class="card-link" href={entry.path}>{entry.title}</a></Title>
+        {/* The path already names the entry; a title that says more (other words, other scripts) is shown too. */}
+        {slug(entry.title) !== entry.slug && <p class="card-name" aria-hidden="true">{entry.title}</p>}
+        {entry.description && <p class="card-description">{entry.description}</p>}
+        {(meta.length > 0 || links) && <p class="card-output">
+          {meta.length > 0 && <span>{meta.join(' · ')}</span>}
+          {links && Object.entries(links).map(([label, url]) => <a class="card-action" href={url}>{label}{external(url) && ' ↗'}</a>)}
+        </p>}
+      </li>;
+    })}
+  </ol>
+</>)}

@@ -1,0 +1,16 @@
+---
+import Prompt from './Prompt.astro';
+import MobilePath from '../nav/MobilePath.astro';
+interface Props { path: string; }
+const { path } = Astro.props;
+---
+<section class="command-bar shell-surface" data-shell-surface aria-label="Site terminal">
+  <div class="mobile-page-tools">
+    <MobilePath path={path} />
+    <div data-js-only><button type="button" class="quiet-button" data-open-search aria-label="Search this space"><span aria-hidden="true">⌕</span></button><button type="button" class="quiet-button" data-open-command aria-label="Open commands"><span aria-hidden="true">&gt;_</span></button><button type="button" class="quiet-button" data-open-themes aria-label="Choose theme"><span aria-hidden="true">◐</span></button></div>
+  </div>
+  <Prompt path={path} id="page-command" />
+  <div class="completions" id="page-command-completions" data-completions aria-live="polite"></div>
+  <p class="shell-hint"><button type="button" data-focus-command><kbd>:</kbd> command</button><button type="button" data-open-search><kbd>s</kbd> search</button><span>Tab complete · Esc leave</span></p>
+  <div class="transcript" data-transcript role="region" aria-label="Command result" aria-live="polite" tabindex="0"></div>
+</section>

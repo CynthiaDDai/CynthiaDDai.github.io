@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Prompt from '../components/shell/Prompt.astro';
+import { site } from '../config';
+import { defaultTheme } from '../lib/theme/registry';
+import MobileIndex from '../components/nav/MobileIndex.astro';
+import MobileTools from '../components/nav/MobileTools.astro';
+import { getEntry, render } from 'astro:content';
+import { getContentTree } from '../lib/navigation/site-index';
+import { listChildren } from '../lib/navigation/filesystem';
+import ContentList from '../components/content/ContentList.astro';
+const tree = await getContentTree();
+const navigation = listChildren('/', tree.entries);
+const about = navigation.find(entry => entry.path === '/about');
+const wander = navigation.find(entry => entry.kind === 'directory') ?? navigation[0];
+const rootEntry = tree.root.index.source === 'explicit' ? await getEntry('content', tree.root.index.document.sourceId) : undefined;
+const rendered = rootEntry ? await render(rootEntry) : undefined;
+const Content = rendered?.Content;
+---
+<BaseLayout home homeContent={!!rootEntry} title={rootEntry ? tree.root.title : undefined} description={rootEntry ? tree.root.description : undefined}>
+  <header class="home-header"><a class="home-wordmark" href={about?.path ?? '/'}>{site.wordmark.name}<span>{site.wordmark.suffix}</span></a><span class="home-caption">{site.caption}</span></header>
+  <main id="main" class="terminal-stage" tabindex="-1">
+    <h1 class="sr-only">{site.name}</h1>
+    <div class="mobile-home">
+      <details class="mobile-home-index" open>
+        <summary><span>{site.wordmark.name}<span class="mobile-wordmark-suffix">{site.wordmark.suffix}</span></span><span class="mobile-index-toggle"><span class="when-open" aria-label="Minimize index">×</span><span class="when-closed">index +</span></span></summary>
+        <MobileIndex path="/" />
+      </details>
+      <div class="mobile-home-rest"><p class="mobile-welcome">{site.bio}</p><MobileTools /></div>
+    </div>
+    <div class="terminal-hero shell-surface" data-shell-surface data-history="full">
+      <div class="transcript" data-transcript role="log" aria-label="Command output" aria-live="polite" aria-relevant="additions" tabindex="0"></div>
+      <Prompt path="/" id="home-command" />
+      <div class="completions" id="home-command-completions" data-completions aria-live="polite"></div>
+      <p class="idle-hint"><button type="button" data-focus-command><kbd>:</kbd> command</button><span aria-hidden="true"> · </span><button type="button" data-open-search><kbd>s</kbd> search</button><span aria-hidden="true"> · </span><button type="button" data-command="help">help</button>{wander && <><span aria-hidden="true"> · </span><a href={wander.path}>wander ↗</a></>}</p>
+    </div>
+  </main>
+  {Content && <section class="page-main" aria-label={tree.root.title}><h2>{tree.root.title}</h2><div class="prose"><Content /></div>{tree.root.frontmatter.show_children !== false && <ContentList entries={tree.root.children} groups={tree.root.frontmatter.groups} />}</section>}
+  <footer class="home-footer"><span>{site.homeFooter.map((word, index) => <>{index > 0 && <>{' '}<span aria-hidden="true">·</span>{' '}</>}{word}</>)}</span><button class="theme-footer" type="button" data-cycle-theme aria-label="Switch color theme"><span class="theme-swatch" aria-hidden="true"></span><span data-theme-name>{defaultTheme.name}</span></button></footer>
+  <noscript><p class="noscript-note">The prompt needs JavaScript. {navigation.map(entry => <a href={entry.path}>{entry.title}{' '}</a>)} work without it.</p></noscript>
+</BaseLayout>
