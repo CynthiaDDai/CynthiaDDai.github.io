@@ -42,6 +42,7 @@
 .article-bottom a { text-decoration: none; color: var(--site-muted); }
 .uses-list dt { font-family: var(--font-ui); font-size: 1rem; font-weight: 550; margin-top: 1.8rem; }
 .uses-list dd { margin: .5rem 0 1.5rem; color: var(--prose-muted); }
+.file-card { margin: 1.4rem 0; }
 @media (max-width: 700px) {
   .article-main { margin-top: 2rem; }
   .prose { font-size: 1.07rem; line-height: 1.8; }

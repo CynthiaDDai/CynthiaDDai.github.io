@@ -13,9 +13,11 @@ export interface SiteEntry {
 
 export const virtualPath = (path: string) => path === '/' ? '~' : `~${path}`;
 
+// Pages are built as about.html and index.html (and may be visited that way); their routes are /about and /.
 export function pathFromUrl(pathname: string): string {
-  try { return decodeURIComponent(pathname).replace(/\/$/, '') || '/'; }
-  catch { return pathname.replace(/\/$/, '') || '/'; }
+  let path = pathname;
+  try { path = decodeURIComponent(pathname); } catch { /* Keep the raw path. */ }
+  return path.replace(/(?:\/index)?\.html$/, '').replace(/\/$/, '') || '/';
 }
 
 export function normalizePath(value: string, cwd = '/'): string {

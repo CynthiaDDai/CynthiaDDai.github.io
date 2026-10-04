@@ -190,7 +190,7 @@
     "background": "transparent",
     "foreground": "p:fg-soft",
     "newline": true,
-    "template": "<p:muted>└─</>{{ if or .Root .Segments.Session.SSHSession }}<p:muted>[</>{{ if .Root }}<p:red></>{{ else }}<p:cyan>󰣀</>{{ end }} <p:fg-soft>{{ .UserName }}@{{ .HostName }}</><p:muted>]</>{{ end }}<p:muted>[</><p:fg-soft>{{ .Segments.Path.Path }}</><p:muted>]</>{{ if .Segments.Contains \"Git\" }}<p:muted>[</><p:magenta> {{ .Segments.Git.HEAD }}</><p:muted>]</>{{ end }}{{ if or (and .Env.NIX_SHELL_LEVEL (ne .Env.NIX_SHELL_LEVEL \"0\")) .Env.IN_NIX_SHELL }}<p:muted>[</><p:cyan></><p:muted>]</>{{ end }}{{ if .Segments.Contains \"Kubectl\" }}<p:muted>[</><p:cyan>⎈ {{ .Segments.Kubectl.Context }}</><p:muted>]</>{{ end }} <p:green>></> "
+    "template": "<p:muted>└─</>{{ if or .Root .Segments.Session.SSHSession }}<p:muted>[</>{{ if .Root }}<p:red></>{{ else }}<p:cyan>󰣀</>{{ end }} <p:fg-soft>{{ .UserName }}@{{ .HostName }}</><p:muted>]</>{{ end }}<p:muted>[</><p:fg-soft>{{ .Segments.Path.Path }}</><p:muted>]</>{{ if .Segments.Contains \"Git\" }}<p:muted>[</><p:magenta></>{{ if .Segments.Git.Working.Changed }} <p:yellow>~</>{{ else }} <p:green>✓</>{{ end }}{{ if .Segments.Git.Behind }} <p:cyan>⇣</>{{ end }}<p:muted>]</>{{ end }}{{ if or (and .Env.NIX_SHELL_LEVEL (ne .Env.NIX_SHELL_LEVEL \"0\")) .Env.IN_NIX_SHELL }}<p:muted>[</><p:cyan></><p:muted>]</>{{ end }}{{ if .Segments.Contains \"Kubectl\" }}<p:muted>[</><p:cyan>⎈ {{ .Segments.Kubectl.Context }}</><p:muted>]</>{{ end }} <p:green>></> "
   },
   "final_space": true,
   "terminal_background": "p:bg"

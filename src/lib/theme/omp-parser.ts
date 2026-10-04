@@ -105,5 +105,15 @@ export function parseOhMyPoshTheme(input: unknown): PromptTheme {
     return [{ alignment: block.alignment === 'right' ? 'right' as const : 'left' as const,
       newline: block.newline === true, segments }];
   });
-  return { palette, lines, background: resolveColor(raw.terminal_background, palette), warnings: [...warnings] };
+  const transient = record(raw.transient_prompt);
+  return {
+    palette, lines, warnings: [...warnings],
+    transient: typeof transient.template === 'string' ? {
+      type: 'text', style: 'plain', template: transient.template, foregroundTemplates: [], backgroundTemplates: [], properties: {},
+      foreground: resolveColor(transient.foreground, palette), background: resolveColor(transient.background, palette),
+      foregroundSource: typeof transient.foreground === 'string' ? transient.foreground : undefined,
+      backgroundSource: typeof transient.background === 'string' ? transient.background : undefined,
+    } : undefined,
+    background: resolveColor(raw.terminal_background, palette),
+  };
 }

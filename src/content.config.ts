@@ -11,8 +11,14 @@ const common = z.looseObject({
   tags: z.array(z.string()).default([]),
   draft: z.boolean().default(false),
   show_children: z.boolean().default(true),
+  // Status value → heading; children are listed under these headings in this order.
+  groups: z.record(z.string(), z.string()).optional(),
   example: z.boolean().default(false),
   status: z.string().optional(),
+  authors: z.string().optional(),
+  venue: z.string().optional(),
+  // Label → URL, e.g. arXiv, PDF, Journal. Site files use absolute paths.
+  links: z.record(z.string(), z.string().regex(/^(?:\/|https?:\/\/)/, 'Links must start with / or http(s)://')).optional(),
   repo: z.url().optional(),
   demo: z.url().optional(),
   featured: z.boolean().default(false),

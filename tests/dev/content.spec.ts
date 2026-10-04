@@ -65,7 +65,7 @@ test('dev discovers added, edited and removed content without restarting the ser
     await expect(page.locator('.content-list a[href="/research/deep"]')).toBeVisible();
     writeFileSync(join(content, 'research/deep/sibling.md'), 'Keeps the directory published.\n');
     writeFileSync(join(content, 'research/deep/post.md'), '---\ndraft: true\n---\nDevelopmentsearchtoken.\n');
-    await expect.poll(async () => (await html('/research/deep')).includes('class="content-link" href="/research/deep/post"')).toBe(false);
+    await expect.poll(async () => (await html('/research/deep')).includes('class="card-link" href="/research/deep/post"')).toBe(false);
     expect((await request.get(`${origin}/research/deep/post`)).status()).toBe(404);
     await page.goto(`${origin}/research/deep`);
     await expect(page.locator('html')).toHaveAttribute('data-site-ready', 'true');

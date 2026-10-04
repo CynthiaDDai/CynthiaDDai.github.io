@@ -49,8 +49,9 @@ The browser suite builds the fixture site, then starts and stops a production pr
 - `feed` lists the directories whose dated documents appear in `/rss.xml` (default `["/blog"]`); add `"/research"` or any other folder. `site.json` is checked on every build and in development: unknown fields, malformed URLs or emails, duplicate friend aliases and an invalid `dateLocale` stop with a message naming the field.
 - Tests never build your own content. `tests/fixtures/site/` holds a separate sample site (`content/` plus `site.json`) with example and `placeholder-*` pages that exercise every feature. The browser, development and build suites point `SITE_CONTENT_DIR`, `SITE_PROFILE` and `SITE_OUT_DIR` at it (output goes to `.fixture-dist/`), so editing `src/content` or `src/config/site.json` cannot break them. Your real content is checked by `npm run build` itself: names, `site.json`, types and internal links. Content files read the profile with `import site from '@site/profile'`.
 - The sample attention article is marked `example: true`, visibly labelled, and excluded from RSS and fastfetch’s latest-content fields. Replace it with your writing, then remove the example flag.
-- Set `draft: true` to exclude a document in both production and development. Drafts are never built, so their URLs return 404; this is the way to keep anything off the site. Keep truly private writing outside the repository anyway, since the source is not encrypted. The older `hidden` flag has been removed and now stops the build with a pointer to `draft`. A draft `index.md` excludes its whole directory subtree. A folder becomes a page only when it contains at least one published document (its own `index.md` counts); empty folders, image folders and draft-only folders never become pages.
+- Set `draft: true` to exclude a document in both production and development. Drafts are never built, so their URLs return 404; this is the way to keep anything off the site. Keep truly private writing outside the repository anyway, since the source is not encrypted. The older `hidden` flag has been removed and now stops the build with a pointer to `draft`. A draft `index.md` excludes its whole directory subtree; the root `src/content/index.md` cannot be a draft, since that would exclude the whole site. A folder becomes a page only when it contains at least one published document (its own `index.md` counts); empty folders, image folders and draft-only folders never become pages.
 - For project entries, optionally add `status`, `repo`, `demo`, and `featured`.
+- For papers and other works, optionally add `authors`, `venue` and `links` (label → URL, e.g. `arXiv`, `PDF`, `HTML`; site files use absolute paths such as `/research/paper.pdf`). They appear on the work's own page and in its parent's listing, where each link is directly clickable.
 
 ```yaml
 ---
@@ -100,13 +101,48 @@ I write about software, design and mathematics.
 
 Children appear below that introduction by default. Set `show_children: false` to hide this listing; the child routes remain available through navigation, commands and search. `index.md` represents its directory and never creates a separate `/index` URL or search result. An optional `src/content/index.md` adds a root introduction and listing below the existing home shell.
 
+To split a listing into sections, give the directory's `index.md` a `groups` map from `status` value to heading. Children are listed under each heading in the map's order (empty sections are omitted), and every child must then carry one of those statuses, or the build stops and names the file. Keep the works flat in one folder: changing `status: Preprint` to `status: Publication` moves a work between sections without changing its URL.
+
+```yaml
+# research/index.md
+---
+title: Research
+groups:
+  Publication: Publications
+  Preprint: Preprints
+---
+
+# research/heights.md
+---
+title: Heights on stacks
+status: Preprint
+authors: Cynthia Dai, A. Coauthor
+venue: arXiv 2503.01234
+links:
+  arXiv: https://arxiv.org/abs/2503.01234
+  PDF: /research/heights.pdf
+---
+Optional notes, abstract or errata.
+```
+
 A directory's `index.md` is also the only place its listing metadata comes from. Its `title` is the name shown in navigation and listings (the only way to give a folder a non-ASCII display name), and its `description` is the text shown next to it in `ls`, listings and search. Without one, the directory shows its derived name and `Explore ~/path.`. Indexes do not change themes or colors; the visitor's chosen theme applies site-wide.
 
-All frontmatter is optional, including `title`, `description`, `order`, `date`, `updated`, `tags`, `draft`, `example`, and `show_children`. A file containing just `Hello world.` is a valid page. `my-cool-page.md` gets the title `My Cool Page`; a directory named `machine-learning` gets `Machine Learning`. The source path determines the URL; a frontmatter `slug` does not override it. See the naming rules above.
+All frontmatter is optional, including `title`, `description`, `order`, `date`, `updated`, `tags`, `draft`, `example`, `show_children` and `groups`. A file containing just `Hello world.` is a valid page. `my-cool-page.md` gets the title `My Cool Page`; a directory named `machine-learning` gets `Machine Learning`. The source path determines the URL; a frontmatter `slug` does not override it. See the naming rules above.
 
 Sibling order uses an explicit numeric `order` first (lower values first), followed by directories, then documents. When all visible sibling documents have dates, documents sort newest first; otherwise the fallback is alphabetical by path. The sample section indexes supply their original navigation order through frontmatter. Both `.md` and `.mdx` are supported, but two files or a file and directory cannot occupy the same public path. System paths such as `/404`, `/rss.xml`, `/_astro` and sitemap XML paths are reserved; conflicts fail the build with a readable error.
 
 For images, place a file alongside your Markdown (or in a folder such as `_assets/`) and use `![Descriptive alt text](./diagram.png)`, or put an asset in `public/` and refer to it as `![Descriptive alt text](/diagram.png)`. Existing Markdown/MDX rendering handles the assets. About and Uses now live in root Markdown files. The supplied Contact uses MDX to show links from `site.json`; it can be replaced by an ordinary `contact.md` if you prefer to write the links directly.
+
+PDFs and other downloads are not embedded, since browser PDF viewers ignore the site theme and fail on most phones. Instead, a link that stands alone on the first line of a paragraph and points at a file in `public/` becomes a file card. The link text is the card's title, and any further lines of that paragraph become its optional description (inline Markdown and math work there). The card shows the file's type, size and name, with a download button. A link inside a sentence stays an ordinary link.
+
+```md
+[Why Linear Algebra](/assets/slides/whylinalg.pdf)
+Motivating linear maps with a formula for the Fibonacci numbers.
+```
+
+Every entry in a directory listing, and every file card, is drawn as a prompt by the current theme: its Oh My Posh `transient_prompt`, repainted when the theme changes. The prompt's path is shortened to the item's name, `…/name` in bold (a directory's ends in `/`); a file card is named after its title in lowercase words, such as `…/algebraic-stacks`. Transient prompts that leave out the path are followed by the name. Below the prompt come the title, only when it says more than the name (other words or another script, such as `MATH 146` for `math-146-winter-2023`), the description, and a line of details and links: the date, authors and venue, tags, or a file's type and size with a `pull` button that downloads it.
+
+Items with a state offer it to the theme as Oh My Posh git fields, and the theme decides how to show it: a file is `.Segments.Git.Behind` (there is something to pull); a file whose link title is `"wip"`, such as `[Category Theory](/notes/category.pdf "wip")`, also has `.Segments.Git.Working.Changed`, as does every work outside the first group of a grouped listing (so list groups from finished to in progress). Anything else with a state is clean. Ordinary pages have no state, so `.Segments.Contains "Git"` is false. The supplied Storm theme shows clean as `✓`, working changes as `~` and behind as `⇣`; any other link title on a file card stops the build.
 
 `npm run build` scans the current tree, generates static routes and rebuilds all navigation and search data. Deploy the new `dist/` to publish additions, edits and removals. The deployed site does not watch your filesystem or run a content server. Development uses Astro's content watcher and recomputes the tree when pages are requested; refresh after editing content. Builds never generate or modify files under `src/content/`.
 
@@ -122,7 +158,7 @@ Press `:` outside text fields to focus the command line on any page. Press `s` t
 
 While the command input is focused, Tab always completes or displays suggestions. A unique directory gains a trailing `/`, and its children become the next suggestions. Ambiguous matches extend their common prefix; ArrowDown/ArrowUp can focus suggestion buttons, and Enter accepts them. Shift+Tab or Escape leaves the input. Long commands, paths, and suggestions wrap visibly. Ctrl+L clears output; Ctrl+C clears the input when no text is selected. Home supports command recall with arrow keys when suggestions are absent. Content pages neither record nor recall command history; Escape also dismisses their current result. There is no `history` command.
 
-The desktop index rail opens on hover, keyboard focus, or explicit activation. Mobile and touch devices use the shared index instead. Content pages have normal top navigation and a persistent command bar immediately above the content. Its linked prompt path is the only breadcrumb. Output stays in that bar, outside article prose. Content and navigation remain useful without JavaScript.
+The desktop index rail on the right edge is the same on every page, and opens on hover, keyboard focus, or explicit activation; on content pages it marks the current section. Until a visitor first opens it, the handle twitches slightly a few seconds after each page load (never with reduced motion); after that, it stays still (remembered in `localStorage`). Mobile and touch devices use the shared index instead. Content pages have only the wordmark and theme switch at the top, and a persistent command bar immediately above the content. Its linked prompt path is the only breadcrumb. Output stays in that bar, outside article prose. Content and navigation remain useful without JavaScript.
 
 Home keeps all transcript results until cleared or the page is left. Its transcript scrolls internally to the newest output while the prompt remains visible inside a centered terminal. Home command recall lives in `sessionStorage`; selected themes live in `localStorage`. Both storage mechanisms are optional. Content pages replace their previous result each time a command runs.
 
@@ -257,7 +293,7 @@ These rules follow the official Oh My Posh [segment](https://ohmyposh.dev/docs/c
 
 ## Deploy elsewhere
 
-`dist/` is a plain static site meant for the root of a domain (`https://you.example/`, a GitHub Pages user site or a custom domain). Sub-path hosting such as `username.github.io/repository/` is not supported. The server should answer `/notes/first-note` with `notes/first-note/index.html` without redirecting, and serve `404.html` with status 404. Caddy's `file_server`, Nginx `try_files $uri $uri/index.html =404`, Netlify and Cloudflare Pages do this by default or with one line. Set `PUBLIC_SITE_URL` when building.
+`dist/` is a plain static site meant for the root of a domain (`https://you.example/`, a GitHub Pages user site or a custom domain). Sub-path hosting such as `username.github.io/repository/` is not supported. Pages are built as `notes/first-note.html` (and `notes.html` beside a `notes/` folder), so the server should answer `/notes/first-note` with `notes/first-note.html` without redirecting, and serve `404.html` with status 404. GitHub Pages, Netlify and Cloudflare Pages do this by default; Caddy needs `try_files {path} {path}.html` (the NixOS module below includes it) and Nginx `try_files $uri $uri.html =404`. Hosts that only serve `folder/index.html` would redirect every page to a trailing-slash URL that differs from the canonical one; `npm run build` checks every internal link against this layout. Set `PUBLIC_SITE_URL` when building.
 
 ## Deploy on a NixOS server with Caddy
 

@@ -56,6 +56,26 @@ describe('filesystem-native content tree', () => {
     expect(searchEntries('root introduction', tree.entries).map(entry => entry.path)).toEqual(['/']);
   });
 
+  it('requires every child of a grouped directory to carry a listed status', () => {
+    const groups = { Publication: 'Publications', Preprint: 'Preprints' };
+    expect(() => buildContentTree([
+      { id: 'research/index.md', data: { groups } },
+      { id: 'research/a.md', data: { status: 'Preprint' } },
+      { id: 'research/b.md', data: { status: 'Published' } },
+      { id: 'research/c.md', data: {} },
+    ])).toThrow(/research\/b\.md: status "Published" is not one of Publication, Preprint[\s\S]*research\/c\.md: status null/);
+    const tree = buildContentTree([
+      { id: 'research/index.md', data: { groups } },
+      { id: 'research/a.md', data: { status: 'Preprint' } },
+      { id: 'notes/free.md', data: {} },
+    ]);
+    expect(tree.nodes.map(node => node.path)).toContain('/research/a');
+  });
+
+  it('refuses a draft root index, which would exclude the whole site', () => {
+    expect(() => buildContentTree([{ id: 'index.md', data: { draft: true } }, { id: 'about.md', data: {} }])).toThrow(/root index\.md would exclude the whole site/);
+  });
+
   it('omits drafts and draft sections entirely, and rejects the removed hidden flag', () => {
     const tree = buildContentTree([
       { id: 'visible.md', data: {}, body: 'Visible prose.' },

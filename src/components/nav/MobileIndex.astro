@@ -20,7 +20,7 @@ const connections = friends.filter(friend => {
   <section class="mobile-index-section">
     <h2>navigate</h2>
     <nav aria-label="Mobile navigation">
-      {navigation.filter(entry => entry.path !== '/').map(entry => <a class="mobile-row" href={entry.path} aria-current={path === entry.path || path.startsWith(entry.path + '/') ? 'page' : undefined}><span>{entry.title}</span><span class="mobile-arrow" aria-hidden="true">→</span></a>)}
+      {navigation.filter(entry => entry.path !== '/').map(entry => <a class="mobile-row" href={entry.path} aria-current={path === entry.path ? 'page' : path.startsWith(`${entry.path}/`) ? 'location' : undefined}><span>{entry.title}</span><span class="mobile-arrow" aria-hidden="true">→</span></a>)}
     </nav>
   </section>
   <MobileTools />

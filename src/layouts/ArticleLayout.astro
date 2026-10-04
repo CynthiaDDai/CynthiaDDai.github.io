@@ -8,10 +8,12 @@ import { site } from '../config';
 interface Props {
   title: string; description: string; date?: Date; updated?: Date; tags: string[];
   example?: boolean; headings: MarkdownHeading[]; parentTitle: string; status?: string; repo?: string; demo?: string;
+  authors?: string; venue?: string; links?: Record<string, string>;
 }
-const { title, description, date, updated, tags, example, headings, parentTitle, status, repo, demo } = Astro.props;
+const { title, description, date, updated, tags, example, headings, parentTitle, status, repo, demo, authors, venue, links = {} } = Astro.props;
 const path = pathFromUrl(Astro.url.pathname);
 const parentPath = normalizePath('..', path);
+const linkList = Object.entries(links);
 const toc = headings.filter(heading => heading.depth === 2);
 const formatDate = (value: Date) => value.toLocaleDateString(site.dateLocale, { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 ---
@@ -22,10 +24,11 @@ const formatDate = (value: Date) => value.toLocaleDateString(site.dateLocale, { 
     <article>
       <header class="article-heading">
         <h1>{title}</h1>
+        {authors && <p class="article-byline">{authors}</p>}
         {description && <p class="article-deck">{description}</p>}
-        <div class="article-meta">{date && <time datetime={date.toISOString()}>{formatDate(date)}</time>}{status && <span class="status">{status}</span>}{example && <span class="example-label">Example content</span>}</div>
+        <div class="article-meta">{date && <time datetime={date.toISOString()}>{formatDate(date)}</time>}{status && <span class="status">{status}</span>}{venue && <span>{venue}</span>}{example && <span class="example-label">Example content</span>}</div>
         {tags.length > 0 && <ul class="tag-list" aria-label="Tags">{tags.map(tag => <li>{tag}</li>)}</ul>}
-        {(repo || demo) && <div class="project-links">{repo && <a href={repo}>Source code ↗</a>}{demo && <a href={demo}>Visit project ↗</a>}</div>}
+        {(repo || demo || linkList.length > 0) && <div class="project-links">{repo && <a href={repo}>Source code ↗</a>}{demo && <a href={demo}>Visit project ↗</a>}{linkList.map(([label, url]) => <a href={url}>{label}{/^https?:/.test(url) && ' ↗'}</a>)}</div>}
       </header>
       {toc.length >= 2 && <details class="toc"><summary>On this page</summary><nav aria-label="Table of contents"><ol>{toc.map(heading => <li><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ol></nav></details>}
       <div class="prose"><slot /></div>

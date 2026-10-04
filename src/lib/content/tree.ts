@@ -10,6 +10,11 @@ export interface ContentMetadata {
   tags?: string[];
   draft?: boolean;
   show_children?: boolean;
+  groups?: Record<string, string>;
+  status?: string;
+  authors?: string;
+  venue?: string;
+  links?: Record<string, string>;
   example?: boolean;
   [key: string]: unknown;
 }
@@ -75,7 +80,10 @@ export function buildContentTree(sources: ContentSource[]): ContentTree {
   const indexPath = (id: string) => id === 'index' ? '/' : `/${id.slice(0, -'/index'.length)}`;
   const isIndex = (id: string) => id === 'index' || id.endsWith('/index');
   const draftDirectories = sources.filter(source => isIndex(contentId(source)) && source.data.draft).map(source => indexPath(contentId(source)));
-  const blocked = (path: string) => draftDirectories.some(parent => parent === '/' || path === parent || path.startsWith(`${parent}/`));
+  // A draft root index would leave a site with no pages; that is never what was meant.
+  const rootDraft = sources.find(source => contentId(source) === 'index' && source.data.draft);
+  if (rootDraft) throw new Error(`${rootDraft.filePath ?? rootDraft.id}: draft: true on the root index.md would exclude the whole site. Remove it, or mark individual pages and folders as drafts.`);
+  const blocked = (path: string) => draftDirectories.some(parent => path === parent || path.startsWith(`${parent}/`));
   const legacyHidden = sources.find(source => 'hidden' in source.data);
   if (legacyHidden) throw new Error(`${legacyHidden.filePath ?? legacyHidden.id}: "hidden" is no longer supported. Use draft: true to keep a page out of the site.`);
   const published = sources.filter(source => !source.data.draft && !blocked(`/${contentId(source)}`));
@@ -153,6 +161,14 @@ export function buildContentTree(sources: ContentSource[]): ContentTree {
     for (const child of node.children) visit(child);
   };
   visit(root);
+  // A directory with `groups` lists its children under one heading per status, so every child needs a listed status.
+  const ungrouped = ordered.flatMap(node => {
+    const groups = node.kind === 'directory' ? node.frontmatter.groups : undefined;
+    if (!groups || node.kind !== 'directory') return [];
+    return node.children.filter(child => !Object.hasOwn(groups, child.frontmatter.status ?? ''))
+      .map(child => `  ${child.kind === 'page' ? child.sourcePath : child.path}: status ${JSON.stringify(child.frontmatter.status ?? null)} is not one of ${Object.keys(groups).join(', ')}`);
+  });
+  if (ungrouped.length) throw new Error(`Children of a directory with groups need one of its statuses:\n${ungrouped.join('\n')}`);
   const entries = ordered.map(node => ({
     path: node.path, title: node.title, description: node.description, kind: node.kind, tags: node.tags,
     date: node.date, updated: node.updated, order: node.order,

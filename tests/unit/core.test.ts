@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import source from '../../tokyo_slim_storm_v1_4.omp.json';
-import { normalizePath, resolvePath, listChildren, breadcrumbs, type SiteEntry } from '../../src/lib/navigation/filesystem';
+import stormSource from '../../src/themes/storm/storm.omp.json';
+import { normalizePath, resolvePath, listChildren, breadcrumbs, pathFromUrl, type SiteEntry } from '../../src/lib/navigation/filesystem';
 import { buildContentTree, type ContentSource } from '../../src/lib/content/tree';
 import { tokenize } from '../../src/lib/terminal/parser';
 import { executeCommand, type CommandContext } from '../../src/lib/terminal/registry';
@@ -10,7 +11,7 @@ import { friends } from '../../src/config';
 import { fastfetch } from '../../src/lib/theme/fastfetch-config';
 import { parseOhMyPoshTheme } from '../../src/lib/theme/omp-parser';
 import { adaptOhMyPoshTheme, themeTokens } from '../../src/lib/theme/omp-adapter';
-import { renderPrompt } from '../../src/lib/theme/prompt-renderer';
+import { renderCardPrompt, renderPrompt } from '../../src/lib/theme/prompt-renderer';
 import { searchEntries, searchableText } from '../../src/lib/search';
 import { parseJsonc, parseFastfetchTheme, fastfetchColor } from '../../src/lib/theme/fastfetch-parser';
 
@@ -42,6 +43,10 @@ describe('command grammar', () => {
   });
 });
 describe('one navigation model', () => {
+  it('maps built page URLs, with or without .html, to their routes', () => {
+    expect(['/index.html', '/', '/about.html', '/about', '/research/paper.html', '/research/', '/404.html'].map(pathFromUrl))
+      .toEqual(['/', '/', '/about', '/about', '/research/paper', '/research', '/404']);
+  });
   it('makes all nested parents navigable and completable without leaking descendants into ls', () => {
     const nested = buildContentTree([...sources,
       { id: 'blog/topic/deep/nested', data: {} },
@@ -207,6 +212,20 @@ describe('Oh My Posh adapter and renderer', () => {
     expect(rendered[0].html).toContain('guest');
     expect(rendered[1].html).toContain('~/blog');
     expect(rendered.map(line => line.html).join('')).not.toContain('{{');
+  });
+  it('draws a card as the theme transient prompt, with its state as git fields the theme decides how to show', () => {
+    const storm = parseOhMyPoshTheme(stormSource);
+    const clean = renderCardPrompt(storm, 'stacks', { working: false, behind: false });
+    expect(clean).toContain('…/<span class="card-title-text">stacks</span>');
+    expect(clean).toContain('✓');
+    expect(renderCardPrompt(storm, 'stacks', { working: true, behind: true })).toMatch(/~[\s\S]*⇣/);
+    // Without a state there is no git segment: only the path is bracketed.
+    expect(renderCardPrompt(storm, 'stacks').match(/\[/g)).toHaveLength(1);
+    expect(renderCardPrompt(storm, 'stacks')).not.toMatch(/{{|guest/);
+    // A transient prompt without the path is followed by the item's name.
+    const bare = parseOhMyPoshTheme({ transient_prompt: { template: '❯ ' }, blocks: [{ type: 'prompt', segments: [{ type: 'path' }] }] });
+    expect(renderCardPrompt(bare, 'topic/')).toContain('<span class="card-command"><span class="card-title-text">topic/</span></span>');
+    expect(renderCardPrompt(storm, '<b>x</b>')).not.toContain('<b>x');
   });
   it('shows an error segment only for a failed command', () => {
     const ok = renderPrompt(parsed, promptContext).at(-1)!.html;

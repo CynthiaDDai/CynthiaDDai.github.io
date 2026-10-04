@@ -84,3 +84,53 @@ test('a placeholder post renders its asset, math, contents, footnote and absolut
   await expect(row).toContainText('placeholder-topic/');
   await expect(row).toContainText('Dummy nested section with its own index.');
 });
+
+test('a grouped directory lists works under status headings with their own links', async ({ page }) => {
+  await page.goto('/papers');
+  await expect(page.locator('.content-group')).toHaveText(['Publications· 1', 'Preprints· 1']);
+  const work = page.locator('.prompt-card').filter({ hasText: 'Placeholder: a published work' });
+  // Each work is the theme's transient prompt for …/name, with its group's git state (storm: ✓ clean, ~ working changes).
+  await expect(work.locator('.card-prompt')).toContainText('…/placeholder-published');
+  await expect(work.locator('.card-title-text')).toHaveText('placeholder-published');
+  await expect(work.locator('.card-prompt')).toContainText('✓');
+  await expect(page.locator('.prompt-card').filter({ hasText: 'Placeholder: a preprint' }).locator('.card-prompt')).toContainText('~');
+  await expect(work.locator('.card-name')).toHaveText('Placeholder: a published work');
+  await expect(work.locator('.card-output')).toContainText('2025-06-01 · Cynthia Placeholder, A. Coauthor · Journal of Placeholders');
+  await expect(work.getByRole('link', { name: 'arXiv ↗' })).toHaveAttribute('href', 'https://arxiv.org/abs/0000.00000');
+  await expect(work.getByRole('link', { name: 'Placeholder: a published work' })).toHaveAttribute('href', '/papers/placeholder-published');
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  // The extra link stays clickable above the stretched title link; the rest of the row opens the work.
+  await work.getByRole('link', { name: 'Notes' }).click();
+  await expect(page).toHaveURL('/notes/placeholder-topic');
+  await page.goBack();
+  await work.click({ position: { x: 12, y: 12 } });
+  await expect(page).toHaveURL('/papers/placeholder-published');
+  await expect(page.locator('.article-byline')).toHaveText('Cynthia Placeholder, A. Coauthor');
+  await expect(page.locator('.article-meta')).toContainText('Journal of Placeholders');
+  await expect(page.locator('.project-links').getByRole('link', { name: 'arXiv ↗' })).toBeVisible();
+  // An ordinary listing uses the same prompts; a directory's path ends in /, and a title its path already says is not repeated.
+  await page.goto('/notes');
+  const topic = page.locator('.prompt-card').filter({ has: page.locator('a[href="/notes/placeholder-topic"]') });
+  await expect(topic.locator('.card-prompt')).toContainText('…/placeholder-topic/');
+  await expect(topic.locator('.card-prompt')).not.toContainText('✓');
+  await expect(topic.locator('.card-name')).toHaveCount(0);
+});
+
+test('a standalone link to a public file becomes a card, with the following lines as its description', async ({ page }) => {
+  await page.goto('/notes/placeholder-files');
+  const cards = page.locator('.file-card');
+  await expect(cards).toHaveCount(2);
+  await expect(cards.first().getByRole('link', { name: 'Placeholder diagram' })).toHaveAttribute('href', '/navigation-model.svg');
+  await expect(cards.first().locator('.card-description')).toContainText('standing in for one sentence');
+  await expect(cards.first().locator('.card-description .katex')).toBeVisible();
+  // The card is named after its title; ⇣ marks something to pull, and a "wip" title working changes.
+  await expect(cards.first().locator('.card-prompt')).toContainText('…/placeholder-diagram');
+  await expect(cards.first().locator('.card-prompt')).toContainText('✓ ⇣');
+  await expect(cards.nth(1).locator('.card-prompt')).toContainText('~ ⇣');
+  await expect(cards.first().locator('.card-output')).toContainText('SVG · 1 KB');
+  await expect(cards.nth(1).locator('.card-description')).toHaveCount(0);
+  await expect(cards.nth(1).getByRole('link', { name: 'Download favicon.svg' })).toHaveAttribute('download', '');
+  await expect(cards.nth(1).getByRole('link', { name: 'Download favicon.svg' })).toHaveText('pull');
+  await expect(page.locator('.prose > p > a[href="/favicon.svg"]')).toHaveText('this icon');
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+});

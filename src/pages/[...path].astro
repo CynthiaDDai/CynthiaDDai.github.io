@@ -4,7 +4,7 @@ import ArticleLayout from '../layouts/ArticleLayout.astro';
 import PageLayout from '../layouts/PageLayout.astro';
 import ContentList from '../components/content/ContentList.astro';
 import { getContentTree } from '../lib/navigation/site-index';
-import { listChildren, virtualPath } from '../lib/navigation/filesystem';
+import { virtualPath } from '../lib/navigation/filesystem';
 import type { ContentNode } from '../lib/content/tree';
 
 export async function getStaticPaths() {
@@ -20,13 +20,13 @@ if (document && !entry) throw new Error(`Missing content document: ${document.so
 const rendered = entry ? await render(entry) : undefined;
 const Content = rendered?.Content;
 const tree = await getContentTree();
-const children = node.kind === 'directory' ? listChildren(node.path, tree.entries) : [];
+const children = node.kind === 'directory' ? node.children : [];
 // Documents always use the article layout, wherever they live; directories use the page layout.
 const parentTitle = tree.nodes.find(parent => parent.path === node.parentPath)?.title ?? 'Home';
 ---
 {node.kind === 'directory' ? <PageLayout title={node.title} description={node.description} eyebrow={virtualPath(node.path)} wide>
   {Content && <div class="prose"><Content /></div>}
-  {node.frontmatter.show_children !== false && children.length > 0 && <ContentList entries={children} />}
+  {node.frontmatter.show_children !== false && children.length > 0 && <ContentList entries={children} groups={node.frontmatter.groups} />}
 </PageLayout> : entry && rendered && Content && <ArticleLayout {...entry.data} title={node.title} description={node.description} tags={node.tags} headings={rendered.headings} parentTitle={parentTitle}>
   <Content />
 </ArticleLayout>}

@@ -145,3 +145,15 @@ export function renderPrompt(theme: PromptTheme, context: PromptContext): { alig
   else if (lines.at(-1)?.alignment === 'right') lines.push({ alignment: 'left', html: '❯ ' });
   return lines;
 }
+
+// A card is a prompt for one item (a page, a work, a file): the theme's transient prompt, with the item's name as a
+// shortened path (…/name) and its state as git fields. A transient prompt that leaves out the path is followed by the
+// name, as the command typed after it, so the item stays identifiable.
+export function renderCardPrompt(theme: PromptTheme, name: string, git?: PromptContext['git']): string {
+  const path = `…/${name}`;
+  const title = `<span class="card-title-text">${escape(name)}</span>`;
+  const html = renderPrompt({ ...theme, lines: [{ alignment: 'left', newline: true, segments: theme.transient ? [theme.transient] : [] }] },
+    { user: '', host: '', cwd: path, status: 'ok', git })[0].html;
+  // Without a transient template, the fallback is the path and ❯.
+  return html.includes(escape(path)) ? html.replace(escape(path), `…/${title}`) : `${html}<span class="card-command">${title}</span>`;
+}

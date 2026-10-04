@@ -1,18 +1,10 @@
 ---
-import { listChildren } from '../../lib/navigation/filesystem';
-import { getSiteIndex } from '../../lib/navigation/site-index';
 import { site } from '../../config';
 import MobileIndex from './MobileIndex.astro';
 const { path } = Astro.props;
-const entries = await getSiteIndex();
-const navigation = [entries.find(entry => entry.path === '/')!, ...listChildren('/', entries)];
 ---
 <header class="top-nav">
   <a class="site-wordmark" href="/">{site.wordmark.name}<span>{site.wordmark.suffix}</span></a>
-  <nav class="primary-nav" aria-label="Primary navigation">
-    {navigation.map(entry =>
-      <a href={entry.path} aria-current={path === entry.path || (entry.path !== '/' && path.startsWith(`${entry.path}/`)) ? 'page' : undefined}>{entry.title}</a>)}
-  </nav>
   <div class="nav-actions">
     <button class="quiet-button theme-button" data-cycle-theme aria-label="Switch color theme" title="Switch color theme"><span aria-hidden="true">◐</span></button>
   </div>

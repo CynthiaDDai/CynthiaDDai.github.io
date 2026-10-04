@@ -7,7 +7,8 @@ function htmlFiles(directory) {
     entry.isDirectory() ? htmlFiles(join(directory, entry.name)) : entry.name.endsWith('.html') ? [join(directory, entry.name)] : []);
 }
 
-// Every internal href/src in the built HTML must resolve to a file in dist, as a static server would.
+// Every internal href/src in the built HTML must resolve to a file in dist, as a static server would without redirecting:
+// /about to about.html (or a file at that path), and only a path ending in / to its index.html.
 export function findBrokenLinks(dist = 'dist') {
   const broken = [];
   for (const file of htmlFiles(dist)) {
@@ -19,7 +20,8 @@ export function findBrokenLinks(dist = 'dist') {
       let path = new URL(link, `https://site.invalid${page}`).pathname;
       try { path = decodeURIComponent(path); } catch { /* Keep the raw path; it will not match a file. */ }
       const target = join(dist, path);
-      if (![target, join(target, 'index.html'), `${target}.html`].some(candidate => existsSync(candidate) && statSync(candidate).isFile())) {
+      const candidates = path.endsWith('/') ? [join(target, 'index.html')] : [target, `${target}.html`];
+      if (!candidates.some(candidate => existsSync(candidate) && statSync(candidate).isFile())) {
         broken.push({ page, link });
       }
     }

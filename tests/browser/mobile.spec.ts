@@ -20,7 +20,7 @@ test('index takes over home, exposes all navigation and keeps the keyboard close
   await expect(page.locator('.mobile-home-rest [data-open-command]')).toBeVisible();
   await page.locator('.mobile-home-index > summary').tap();
   await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: 'Blog' }).tap();
-  await page.locator('.content-link').first().tap();
+  await page.locator('.card-link').first().tap();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('The shape of attention');
   await expect(page.locator('.command-form')).not.toBeVisible();
   await page.getByRole('navigation', { name: 'Current location' }).getByRole('link', { name: 'blog', exact: true }).tap();

@@ -36,8 +36,8 @@ test('the NixOS module serves static routes, assets, and real 404s through Caddy
     }
     assert.ok(ready, logs);
     // Every built page of whatever content is in dist/, plus the feeds.
-    const pages = (await readdir(root, { recursive: true })).filter(file => file.endsWith('index.html'))
-      .map(file => '/' + file.replace(/\\/g, '/').replace(/(^|\/)index\.html$/, ''));
+    const pages = (await readdir(root, { recursive: true })).filter(file => file.endsWith('.html') && file !== '404.html')
+      .map(file => '/' + file.replace(/\\/g, '/').replace(/(^|\/)?index\.html$/, '').replace(/\.html$/, ''));
     assert.ok(pages.length > 1, 'dist/ contains built pages');
     for (const path of [...pages, '/rss.xml', '/sitemap.xml']) {
       const response = await fetch(base + path);

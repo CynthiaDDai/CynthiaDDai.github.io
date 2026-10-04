@@ -1,7 +1,7 @@
 import { site as config, friends } from '../config';
 import { virtualPath, breadcrumbs, type SiteEntry } from '../lib/navigation/filesystem';
 import { themes, ThemeController } from '../lib/theme/registry';
-import { renderPrompt } from '../lib/theme/prompt-renderer';
+import { renderCardPrompt, renderPrompt } from '../lib/theme/prompt-renderer';
 import { executeCommand, type CommandResult } from '../lib/terminal/registry';
 import { CommandHistory } from '../lib/terminal/history';
 import { autocomplete, commonCompletionPrefix } from '../lib/terminal/autocomplete';
@@ -319,6 +319,12 @@ document.addEventListener('keydown', event => {
 function updateThemeLabels() {
   document.querySelectorAll('[data-theme-name]').forEach(element => { element.textContent = theme.current.name; });
   document.querySelectorAll<HTMLElement>('[data-select-theme]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.selectTheme === theme.current.id)));
+  // Cards are prompts for their items; renderCardPrompt returns only escaped literals and validated theme markup.
+  document.querySelectorAll<HTMLElement>('[data-card]').forEach(card => {
+    const git = card.dataset.cardGit;
+    card.querySelector('.card-prompt')!.innerHTML = renderCardPrompt(theme.current.terminal, card.dataset.cardName!,
+      git === undefined ? undefined : { working: git.includes('working'), behind: git.includes('behind') });
+  });
 }
 updateThemeLabels();
 document.addEventListener('site:theme', updateThemeLabels);
@@ -361,8 +367,17 @@ touchView.addEventListener('change', () => {
 
 document.querySelectorAll<HTMLButtonElement>('[data-toggle-edge]').forEach(button => {
   const menu = button.closest<HTMLElement>('.edge-menu')!;
+  const edge = menu.closest<HTMLElement>('.edge-navigation')!;
+  const seenKey = 'site-index-seen';
   let pinned = false;
-  const sync = () => button.setAttribute('aria-expanded', String(pinned || menu.matches(':hover, :focus-within')));
+  try { if (!localStorage.getItem(seenKey)) edge.classList.add('nudge'); } catch {}
+  const sync = () => {
+    const expanded = pinned || menu.matches(':hover, :focus-within');
+    button.setAttribute('aria-expanded', String(expanded));
+    if (!expanded || !edge.classList.contains('nudge')) return;
+    edge.classList.remove('nudge');
+    try { localStorage.setItem(seenKey, '1'); } catch {}
+  };
   button.addEventListener('click', () => { pinned = !pinned; menu.classList.toggle('is-expanded', pinned); sync(); });
   for (const event of ['mouseenter', 'mouseleave', 'focusin']) menu.addEventListener(event, sync);
   menu.addEventListener('focusout', () => queueMicrotask(sync));

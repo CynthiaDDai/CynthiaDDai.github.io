@@ -23,6 +23,8 @@ in {
         }
         @assets path /_astro/*
         header @assets Cache-Control "public, max-age=31536000, immutable"
+        # Pages are built as about.html and served at /about, as on GitHub Pages.
+        try_files {path} {path}.html
         file_server {
           disable_canonical_uris
         }

@@ -4,9 +4,11 @@ export const escapeHtml = (text: string) => text.replace(/[&<>"']/g, char => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 }[char]!));
 
-const placeholders = new Set(['.UserName', '.HostName', '.Path', '.PWD', '.Folder', '.Code', '.CurrentDate | date .Format']);
-const booleans = new Set(['.Root', '.SSHSession', '.Error']);
+const placeholders = new Set(['.UserName', '.HostName', '.Path', '.PWD', '.Folder', '.Code', '.Segments.Path.Path', '.Segments.Git.HEAD', '.CurrentDate | date .Format']);
+const booleans = new Set(['.Root', '.SSHSession', '.Error', '.Segments.Git.Working.Changed', '.Segments.Git.Behind']);
 const comparison = /^(eq|ne|gt|ge|lt|le) \.Code (-?\d+)$/;
+// Transient prompts ask which segments the full prompt rendered.
+const contains = /^\.Segments\.Contains "(\w+)"$/;
 const expression = (piece: string) => piece.slice(2, -2).trim().replace(/^-\s+|\s+-$/g, '');
 
 // Diagnostics and rendering share the same deliberately small Go-template subset.
@@ -14,7 +16,7 @@ export function unsupportedExpressions(template: string): string[] {
   return [...template.matchAll(/{{[\s\S]*?}}/g)].map(match => expression(match[0])).filter(expr => {
     if (expr === 'end' || expr === 'else') return false;
     const condition = expr.replace(/^(?:else )?if /, '');
-    return !placeholders.has(expr) && !booleans.has(condition) && !comparison.test(condition);
+    return !placeholders.has(expr) && !booleans.has(condition) && !comparison.test(condition) && !contains.test(condition);
   });
 }
 
@@ -43,10 +45,16 @@ export function expandTemplate(template: string, ctx: PromptContext, properties:
   const values: Record<string, string> = {
     '.UserName': ctx.user, '.HostName': ctx.host, '.Path': ctx.cwd, '.PWD': ctx.cwd,
     '.Folder': ctx.cwd.split('/').at(-1) || '~', '.Code': ctx.status === 'error' ? '1' : '0',
+    '.Segments.Path.Path': ctx.cwd, '.Segments.Git.HEAD': '',
   };
-  const conditions: Record<string, boolean> = { '.Root': false, '.SSHSession': false, '.Error': ctx.status === 'error' };
+  const conditions: Record<string, boolean> = {
+    '.Root': false, '.SSHSession': false, '.Error': ctx.status === 'error',
+    '.Segments.Git.Working.Changed': !!ctx.git?.working, '.Segments.Git.Behind': !!ctx.git?.behind,
+  };
   const evaluate = (condition: string): boolean | undefined => {
     if (booleans.has(condition)) return conditions[condition];
+    const segment = condition.match(contains)?.[1];
+    if (segment) return segment === 'Path' || (segment === 'Git' && !!ctx.git);
     const match = condition.match(comparison);
     if (!match) return undefined;
     const a = Number(values['.Code']); const b = Number(match[2]);

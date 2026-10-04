@@ -21,7 +21,7 @@ test('production builds derive routes, navigation and search from content withou
       const path = join(directory, entry.name);
       return entry.isDirectory() ? [[path, 'directory'], ...sourceSnapshot(path)] : [[path, readFileSync(path).toString('base64')]];
     });
-    const readPage = path => readFileSync(join(root, 'dist', path, 'index.html'), 'utf8');
+    const readPage = path => readFileSync(join(root, 'dist', `${path || 'index'}.html`), 'utf8');
     const htmlFiles = (directory = join(root, 'dist')) => readdirSync(directory, { withFileTypes: true }).flatMap(entry =>
       entry.isDirectory() ? htmlFiles(join(directory, entry.name)) : entry.name.endsWith('.html') ? [join(directory, entry.name)] : []);
     const pageData = html => JSON.parse(html.match(/<script id="site-data"[^>]*>([\s\S]*?)<\/script>/)[1]);
@@ -78,8 +78,8 @@ test('production builds derive routes, navigation and search from content withou
     assert.ok(data.entries.find(entry => entry.path === '/foo').searchText.includes('Uniqueroottoken'));
     assert.ok(data.entries.find(entry => entry.path === '/research/first').searchText.includes('Researchuniquetoken'));
     assert.ok(!data.entries.find(entry => entry.path === '/research').searchText?.includes('Researchuniquetoken'));
-    assert.match(readPage('research'), /class="content-link" href="\/research\/first"/);
-    assert.match(readPage('research'), /class="content-link" href="\/research\/machine-learning"/);
+    assert.match(readPage('research'), /class="card-link" href="\/research\/first"/);
+    assert.match(readPage('research'), /class="card-link" href="\/research\/machine-learning"/);
     assert.match(readPage('research/machine-learning'), /href="\/research\/machine-learning\/attention"/);
     assert.match(readPage('research/first'), /alt="Research diagram"/);
     assert.match(readPage('research/first'), /src="\/_astro\/diagram/);
@@ -89,25 +89,25 @@ test('production builds derive routes, navigation and search from content withou
     }
     assert.ok(!htmlFiles().some(file => readFileSync(file, 'utf8').includes('Ignoredunderscoretoken')));
     assert.match(readPage('hobby'), /Hobbylandingtoken/);
-    assert.doesNotMatch(readPage('hobby'), /class="content-link" href="\/hobby\/post"/);
-    assert.ok(existsSync(join(root, 'dist/hobby/post/index.html')));
-    assert.ok(existsSync(join(root, 'dist/mycat/portrait/index.html')));
-    assert.ok(!existsSync(join(root, 'dist/secret')));
+    assert.doesNotMatch(readPage('hobby'), /class="card-link" href="\/hobby\/post"/);
+    assert.ok(existsSync(join(root, 'dist/hobby/post.html')));
+    assert.ok(existsSync(join(root, 'dist/mycat/portrait.html')));
+    assert.ok(!existsSync(join(root, 'dist/secret.html')) && !existsSync(join(root, 'dist/secret')));
     assert.ok(!htmlFiles().some(file => readFileSync(file, 'utf8').includes('Secrettoken')));
     assert.doesNotMatch(readFileSync(join(root, 'dist/sitemap.xml'), 'utf8'), /secret|draft-section/);
-    assert.ok(!existsSync(join(root, 'dist/draft-section')));
+    assert.ok(!existsSync(join(root, 'dist/draft-section.html')) && !existsSync(join(root, 'dist/draft-section')));
     assert.ok(!data.entries.some(entry => entry.path.startsWith('/draft-section')));
     assert.ok(!data.entries.some(entry => entry.path.endsWith('/index')));
     for (const section of ['blog', 'projects', 'notes']) {
       for (const parent of ['topic', 'topic/deep']) {
-        assert.ok(existsSync(join(root, 'dist', section, parent, 'index.html')));
+        assert.ok(existsSync(join(root, 'dist', section, `${parent}.html`)));
         assert.equal(data.entries.find(entry => entry.path === `/${section}/${parent}`)?.kind, 'directory');
       }
-      const article = readFileSync(join(root, 'dist', section, 'topic/deep/nested/index.html'), 'utf8');
+      const article = readFileSync(join(root, 'dist', section, 'topic/deep/nested.html'), 'utf8');
       assert.match(article, new RegExp(`href="/${section}/topic/deep"`));
       assert.match(article, /Back to Deep/);
-      const listing = readFileSync(join(root, 'dist', section, 'topic/deep/index.html'), 'utf8');
-      assert.match(listing, new RegExp(`class="content-link" href="/${section}/topic/deep/nested"`));
+      const listing = readFileSync(join(root, 'dist', section, 'topic/deep.html'), 'utf8');
+      assert.match(listing, new RegExp(`class="card-link" href="/${section}/topic/deep/nested"`));
       assert.ok(!existsSync(join(root, 'dist', section, 'unpublished')));
       assert.ok(!data.entries.some(entry => entry.path.includes('unpublished')));
     }
@@ -127,12 +127,12 @@ test('production builds derive routes, navigation and search from content withou
     assert.match(updatedHome, /Rootlandingtoken/);
     assert.match(readPage('research'), /<h1>Research lab<\/h1>/);
     assert.match(readPage('research'), /Explicitlandingtoken/);
-    assert.match(readPage('research'), /class="content-link" href="\/research\/first"/);
+    assert.match(readPage('research'), /class="card-link" href="\/research\/first"/);
     assert.ok(updatedData.entries.find(entry => entry.path === '/research').searchText.includes('Explicitlandingtoken'));
     assert.ok(!updatedData.entries.some(entry => entry.path === '/foo'));
-    assert.ok(!existsSync(join(root, 'dist/foo')));
-    assert.ok(existsSync(join(root, 'dist/new-page/index.html')));
-    assert.ok(!existsSync(join(root, 'dist/research/index/index.html')));
+    assert.ok(!existsSync(join(root, 'dist/foo.html')));
+    assert.ok(existsSync(join(root, 'dist/new-page.html')));
+    assert.ok(!existsSync(join(root, 'dist/research/index.html')));
     const profilePath = join(root, 'src/config/site.json');
     const profile = JSON.parse(readFileSync(profilePath, 'utf8'));
     profile.github = 'https://github.com/example';

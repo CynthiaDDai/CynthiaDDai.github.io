@@ -27,6 +27,8 @@ export interface PromptLine {
 export interface PromptTheme {
   palette: Record<string, string>;
   lines: PromptLine[];
+  // Oh My Posh's transient_prompt, as a single plain segment.
+  transient?: PromptSegment;
   background?: string;
   warnings: string[];
 }
@@ -38,6 +40,8 @@ export interface PromptContext {
   status: 'ok' | 'error';
   now?: Date;
   pathLinks?: { label: string; path: string }[];
+  // A card's state, offered to transient prompts as git fields: working changes (in progress) and behind (a file to pull).
+  git?: { working: boolean; behind: boolean };
 }
 
 export interface SiteTheme {

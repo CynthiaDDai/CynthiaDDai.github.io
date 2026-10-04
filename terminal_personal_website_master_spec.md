@@ -337,12 +337,12 @@ Recommended structure:
 
 ## 4.1 Top navigation
 
-Content pages should have a real top navigation bar.
+Content pages should have a real top navigation bar. Site-wide section links are not repeated there: the right-edge index stays in the same place on every page, as on home, and marks the current section (decided 2026-10-04).
 
 It should contain some combination of:
 
 - current path / breadcrumb;
-- primary navigation links;
+- a link home (the wordmark);
 - command-surface trigger such as `>_`;
 - appearance/theme control if needed.
 
@@ -1376,7 +1376,7 @@ The project is considered successful when all of the following are true:
 - [ ] Shell commands resolve through the same route model as normal links.
 - [ ] Blog/project/note pages render as real readable web pages, never as `cat`/`bat` output.
 - [ ] Markdown pages support high-quality typography, syntax-highlighted code, and KaTeX math.
-- [ ] Content pages have real top navigation and a shell command affordance.
+- [ ] Content pages have real top navigation, the same right-edge index as home, and a shell command affordance.
 - [ ] Desktop has an accessible right-edge navigation affordance.
 - [ ] Mobile does not depend on hover.
 - [ ] Default behavior does not globally capture Vimium-like keys.

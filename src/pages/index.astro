@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Prompt from '../components/shell/Prompt.astro';
-import EdgeNav from '../components/nav/EdgeNav.astro';
 import { site } from '../config';
 import { defaultTheme } from '../lib/theme/registry';
 import MobileIndex from '../components/nav/MobileIndex.astro';
@@ -36,8 +35,7 @@ const Content = rendered?.Content;
       <p class="idle-hint"><button type="button" data-focus-command><kbd>:</kbd> command</button><span aria-hidden="true"> · </span><button type="button" data-open-search><kbd>s</kbd> search</button><span aria-hidden="true"> · </span><button type="button" data-command="help">help</button>{wander && <><span aria-hidden="true"> · </span><a href={wander.path}>wander ↗</a></>}</p>
     </div>
   </main>
-  {Content && <section class="page-main" aria-label={tree.root.title}><h2>{tree.root.title}</h2><div class="prose"><Content /></div>{tree.root.frontmatter.show_children !== false && <ContentList entries={navigation} />}</section>}
-  <EdgeNav />
+  {Content && <section class="page-main" aria-label={tree.root.title}><h2>{tree.root.title}</h2><div class="prose"><Content /></div>{tree.root.frontmatter.show_children !== false && <ContentList entries={tree.root.children} groups={tree.root.frontmatter.groups} />}</section>}
   <footer class="home-footer"><span>{site.homeFooter.map((word, index) => <>{index > 0 && <>{' '}<span aria-hidden="true">·</span>{' '}</>}{word}</>)}</span><button class="theme-footer" type="button" data-cycle-theme aria-label="Switch color theme"><span class="theme-swatch" aria-hidden="true"></span><span data-theme-name>{defaultTheme.name}</span></button></footer>
   <noscript><p class="noscript-note">The prompt needs JavaScript. {navigation.map(entry => <a href={entry.path}>{entry.title}{' '}</a>)} work without it.</p></noscript>
 </BaseLayout>

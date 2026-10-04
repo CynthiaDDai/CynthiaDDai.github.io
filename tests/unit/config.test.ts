@@ -93,14 +93,17 @@ describe('site profile', () => {
 describe('internal link check', () => {
   it('accepts links that a static server would resolve and reports the rest', () => {
     const root = temporary();
-    for (const path of ['notes/first', 'notes', 'about']) mkdirSync(join(root, path), { recursive: true });
+    for (const path of ['notes', 'legacy']) mkdirSync(join(root, path), { recursive: true });
     writeFileSync(join(root, 'rss.xml'), '');
-    writeFileSync(join(root, 'notes/first/index.html'), '<a href="/notes">up</a><a href="./paper.md">bad</a><a href="first">sibling</a><img src="/missing.png"><a href="https://x.test">ext</a><a href="#top">top</a><a href="mailto:a@b.c">mail</a>');
-    writeFileSync(join(root, 'notes/index.html'), '<a href="/notes/first">ok</a><a href="/rss.xml">rss</a><script>const a = "<a href=\\"/nowhere\\">";</script>');
-    writeFileSync(join(root, 'about/index.html'), '<a href="/no-such-page">x</a>');
-    writeFileSync(join(root, 'index.html'), '<a href="/about">about</a>');
+    writeFileSync(join(root, 'notes/first.html'), '<a href="/notes">up</a><a href="./paper.md">bad</a><a href="first">sibling</a><img src="/missing.png"><a href="https://x.test">ext</a><a href="#top">top</a><a href="mailto:a@b.c">mail</a>');
+    writeFileSync(join(root, 'notes.html'), '<a href="/notes/first">ok</a><a href="/rss.xml">rss</a><script>const a = "<a href=\\"/nowhere\\">";</script>');
+    writeFileSync(join(root, 'about.html'), '<a href="/no-such-page">x</a><a href="/legacy">redirects</a><a href="/legacy/">ok</a>');
+    writeFileSync(join(root, 'legacy/index.html'), '');
+    writeFileSync(join(root, 'index.html'), '<a href="/about">about</a><a href="/">home</a>');
     expect(findBrokenLinks(root)).toEqual([
       { page: '/about', link: '/no-such-page' },
+      // A folder's index.html is only served at /legacy/; /legacy would redirect.
+      { page: '/about', link: '/legacy' },
       { page: '/notes/first', link: './paper.md' },
       { page: '/notes/first', link: '/missing.png' },
     ]);

@@ -11,6 +11,7 @@ import { site } from '../config';
 import SiteSearch from '../components/shell/SiteSearch.astro';
 import { fastfetch } from '../lib/theme/fastfetch-config';
 import MobilePanels from '../components/shell/MobilePanels.astro';
+import EdgeNav from '../components/nav/EdgeNav.astro';
 import '../styles/mobile.css';
 interface Props { title?: string; description?: string; home?: boolean; homeContent?: boolean; article?: boolean; }
 const { title, description = site.description, home = false, homeContent = false, article = false } = Astro.props;
@@ -45,6 +46,7 @@ const canonical = new URL(path, Astro.site);
   <body class:list={[home && 'home-page', homeContent && 'home-content']}>
     <a class="skip-link" href="#main">Skip to content</a>
     <slot />
+    <EdgeNav path={path} />
     <SiteSearch />
     <MobilePanels path={path} />
     <script id="site-data" type="application/json" is:inline set:html={JSON.stringify({ entries, path, site, fastfetch }).replaceAll('<', '\\u003c')} />

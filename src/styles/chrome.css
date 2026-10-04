@@ -22,6 +22,11 @@
 .edge-navigation nav { width: 230px; background: var(--site-bg); padding: 1.5rem 2.8rem 1.5rem 1.5rem; border-left: 1px solid var(--chrome-border); }
 .edge-navigation nav a { display: flex; align-items: center; gap: .75rem; padding: .65rem 0; color: var(--site-muted); text-decoration: none; font-size: .85rem; }
 .edge-navigation nav a:hover { color: var(--terminal-cyan); }
+.edge-navigation nav a[aria-current] { color: var(--terminal-accent-1); }
+/* Until a visitor first opens the index, the handle twitches once a few seconds after load. */
+@keyframes edge-nudge { 0%, 50%, 100% { translate: 0; } 25%, 75% { translate: -3px 0; } }
+.edge-navigation.nudge .edge-handle { animation: edge-nudge .8s ease-in-out 3s; }
+@media (prefers-reduced-motion: reduce) { .edge-navigation.nudge .edge-handle { animation: none; } }
 .nav-directory { color: var(--terminal-accent-1); margin: 0 0 .9rem; font-size: 1.05rem; }
 .nav-number { font-size: .65rem; }
 .nav-arrow { margin-left: auto; color: var(--terminal-accent-1); }
@@ -33,9 +38,6 @@
 .site-wordmark { flex: 1; min-width: 0; text-decoration: none; font-size: .9rem; }
 .site-wordmark span { color: var(--site-muted); }
 .path-separator { color: var(--site-muted); }
-.primary-nav { display: flex; flex-wrap: wrap; gap: 1.7rem; }
-.primary-nav a { text-decoration: none; color: var(--site-muted); }
-.primary-nav a:hover, .primary-nav a[aria-current] { color: var(--terminal-cyan); }
 .nav-actions { display: flex; align-items: center; gap: .6rem; }
 .theme-button { font-size: 1.2rem; }
 .mobile-nav { display: none; }
@@ -45,24 +47,41 @@
 .eyebrow { font-family: var(--font-mono); font-size: .75rem; color: var(--terminal-accent-1); margin-bottom: 1.5rem; }
 h1 { font-size: clamp(2.35rem, 4.3vw, 3.9rem); font-weight: 500; line-height: 1.15; letter-spacing: -.045em; margin: 0 0 1.4rem; text-wrap: balance; }
 .page-description { color: var(--site-muted); line-height: 1.6; font-size: 1.1rem; max-width: 55ch; }
-.content-list { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--chrome-border); }
-.content-list li { border-bottom: 1px solid var(--chrome-border); }
-.content-link { display: grid; grid-template-columns: 125px 1fr; gap: 2rem; padding: 2.25rem 0; text-decoration: none; }
-.content-link:hover h2 { color: var(--terminal-cyan); }
-.content-list-meta { font-family: var(--font-mono); color: var(--site-muted); font-size: .7rem; padding-top: .35rem; line-height: 1.8; display: flex; flex-direction: column; gap: .45rem; }
-.content-list-copy h2 { font-size: 1.4rem; font-weight: 500; margin: 0 0 .75rem; letter-spacing: -.02em; display: flex; justify-content: space-between; gap: 1rem; }
-.content-list-copy h2 > span { color: var(--terminal-accent-1); font-size: 1.1rem; }
-.content-list-copy p { color: var(--site-muted); font-size: 1rem; line-height: 1.65; margin: 0 0 1rem; }
-.content-tags { font-family: var(--font-mono); font-size: .7rem; color: var(--terminal-accent-2); }
+/* A group heading is a rule with the name and count set into it: ── Publications · 2 ────── */
+.content-group { display: flex; align-items: center; gap: .6rem; margin: 3.5rem 0 1.6rem; font-family: var(--font-mono); font-size: .9rem; font-weight: 400; letter-spacing: .02em; color: var(--terminal-accent-1); }
+.content-group::before { content: '──' / ''; }
+.content-group::after { content: ''; flex: 1; border-top: 1px solid color-mix(in srgb, currentColor 45%, transparent); }
+.content-group-count { color: var(--site-muted); }
+/* Every listed entry and file card is a prompt for that item, drawn by the current theme's transient prompt.
+   Its title link covers it; any other links sit above. */
+.prompt-card { position: relative; font-family: var(--font-mono); font-size: .82rem; border-radius: 4px; }
+.card-prompt { color: var(--terminal-fg); font-size: 1.15em; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; }
+.card-title-text { color: var(--site-fg); font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .25em; }
+.card-command { margin-left: .5ch; }
+.card-title { margin: 0; font: inherit; }
+.card-link { position: absolute; inset: -.4rem -.6rem; font-size: 0; color: transparent; border-radius: 4px; }
+.card-link:hover { background: color-mix(in srgb, var(--site-fg) 5%, transparent); }
+.prompt-card p.card-name, .prompt-card p.card-description, .prompt-card p.card-output { margin: .1rem 0 0 1.05rem; font-family: var(--font-mono); font-size: inherit; line-height: 1.7; }
+.prompt-card p.card-name { color: var(--site-fg); }
+.prompt-card p.card-description { color: var(--site-muted); }
+.prompt-card p.card-output { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; margin-top: .35rem; color: var(--site-muted); font-size: .78rem; }
+.card-description a { position: relative; z-index: 1; }
+.card-action:any-link { position: relative; z-index: 1; font-family: var(--font-mono); font-size: inherit; color: var(--prose-link); text-decoration: none; white-space: nowrap; }
+.card-action::before, .card-action::after { display: inline-block; white-space: pre; }
+.card-action::before { content: '[ ' / ''; color: var(--site-muted); }
+.card-action::after { content: ' ]' / ''; color: var(--site-muted); }
+.card-action:any-link:hover, .card-action:any-link:focus-visible { text-decoration: underline; text-underline-offset: .25em; }
+.content-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.6rem; }
 .page-footer { width: min(100% - 3rem, 1100px); margin: 0 auto; padding: 2rem 0; border-top: 1px solid var(--chrome-border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; font-family: var(--font-mono); font-size: .7rem; color: var(--site-muted); }
 .page-footer a { text-decoration: none; }
 .noscript-note { position: fixed; bottom: 5rem; left: 1.5rem; right: 1.5rem; text-align: center; font-size: .85rem; color: var(--site-muted); }
+/* Keep the text clear of the index handle on narrow desktop windows. */
+@media (min-width: 701px) and (max-width: 1000px) and (pointer: fine) {
+  .page-main, .page-main.wide, .article-main { width: min(100% - 8rem, 760px); }
+}
 @media (max-width: 850px) {
   .top-nav { padding: 1.5rem; gap: 1rem; }
-  .primary-nav { gap: 1rem; }
 }
 @media (max-width: 700px), (pointer: coarse) {
-  .content-link { grid-template-columns: 1fr; }
-  .content-list-meta { flex-direction: row; gap: 1rem; }
   .page-footer > span { display: none; }
 }

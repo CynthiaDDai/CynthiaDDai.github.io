@@ -76,7 +76,7 @@ test('inline article commands resolve parents and previous routes', async ({ pag
 });
 test('normal navigation, breadcrumbs, and browser back work', async ({ page }) => {
   await page.goto('/blog'); await page.locator('.content-list a').first().click();
-  await page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Projects' }).click();
+  await page.locator('.edge-handle').hover(); await page.locator('.edge-menu').getByRole('link', { name: 'projects/' }).click();
   await expect(page).toHaveURL('/projects'); await focusCommand(page); await command(page, 'back');
   await expect(page).toHaveURL('/blog/the-shape-of-attention');
 });
@@ -87,6 +87,18 @@ test('desktop rail expands with pointer and keyboard focus', async ({ page }) =>
   await expect(rail.getByRole('link', { name: 'projects/' })).toBeVisible();
   await page.keyboard.press('Tab'); await expect(rail.getByRole('link', { name: 'about' })).toBeFocused();
   await page.keyboard.press('Enter'); await expect(page).toHaveURL('/about');
+});
+test('content pages keep the same rail, marking the current section, and it nudges only until first opened', async ({ page }) => {
+  await page.goto('/blog/the-shape-of-attention');
+  await expect(page.getByRole('navigation', { name: 'Primary navigation' })).toHaveCount(0);
+  const edge = page.locator('.edge-navigation');
+  await expect(edge.locator('a[aria-current="location"]')).toHaveAttribute('href', '/blog');
+  await expect(edge).toHaveClass(/nudge/);
+  await edge.locator('.edge-handle').hover();
+  await expect(edge).not.toHaveClass(/nudge/);
+  await page.goto('/blog'); await expect(page.locator('html')).toHaveAttribute('data-site-ready', 'true');
+  await expect(page.locator('.edge-navigation a[aria-current="page"]')).toHaveAttribute('href', '/blog');
+  await expect(page.locator('.edge-navigation')).not.toHaveClass(/nudge/);
 });
 test('mobile navigation needs no hover and never overflows', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 }); await page.goto('/');
@@ -169,7 +181,7 @@ test('math, highlighted code, footnotes, and headings arrive as static HTML', as
   await page.goto('/blog/the-shape-of-attention');
   await expect(page.locator('.katex').first()).toBeVisible(); await expect(page.locator('pre.astro-code')).toBeVisible();
   await expect(page.locator('.footnotes')).toBeVisible(); await expect(page.locator('#queries-keys-and-values')).toBeVisible();
-  await page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Projects' }).click();
+  await page.locator('.edge-handle').focus(); const rail = page.locator('.edge-menu a[href="/projects"]'); await expect(rail).toBeVisible(); await rail.focus(); await rail.press('Enter');
   await expect(page).toHaveURL('/projects');
   await page.goto('/notes/paths-have-parents');
   await expect(page.locator('.katex').first()).toBeVisible();
