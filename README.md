@@ -12,7 +12,7 @@ A personal website that looks and feels like a terminal, without pretending to b
 
 ## Quick start
 
-Requires Node.js 22.12 or newer.
+Fork this repository and rename the fork to `<your-user>.github.io`; [Getting started](docs/getting-started.md) walks through it. Requires Node.js 22.12 or newer.
 
 ```sh
 npm ci
@@ -33,6 +33,10 @@ On NixOS, run `nix-shell` first.
 | [Commands and keys](docs/commands.md) | What visitors can type and press |
 | [Deploying](docs/deploying.md) | GitHub Pages, custom domains, other hosts, NixOS |
 | [Development](docs/development.md) | Architecture, project layout, tests |
+
+## Credits
+
+Designed and directed by [Cynthia](https://github.com/CynthiaDDai). The code and documentation were written by Claude (Anthropic) using [Claude Code](https://claude.com/claude-code).
 
 ## License
 
