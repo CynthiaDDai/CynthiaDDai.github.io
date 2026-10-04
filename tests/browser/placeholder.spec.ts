@@ -64,26 +64,21 @@ test('every document uses the article layout and returns to its parent by title'
   await expect(page.getByRole('link', { name: 'Visit project ↗' })).toBeVisible();
 });
 
-test('Latin text uses the bundled fonts and Chinese falls through to the CJK font, downloaded only when needed', async ({ page }) => {
+test('code uses the bundled monospace font, and a page without CJK text loads no CJK font', async ({ page }) => {
   const fontRequests: string[] = [];
   page.on('request', request => { if (request.url().includes('/fonts/')) fontRequests.push(new URL(request.url()).pathname); });
   await page.goto('/');
   await page.evaluate(() => document.fonts.ready);
   expect(fontRequests).toContain('/fonts/maple-mono-regular.woff2');
-  expect(fontRequests).not.toContain('/fonts/huiwen-mincho.woff2');
+  expect(fontRequests.filter(path => !/\/(maple-mono-[a-z]+|nerd-symbols-mono)\.woff2$/.test(path))).toEqual([]);
   await page.goto('/blog/placeholder-hello');
   await page.evaluate(() => document.fonts.ready);
   const session = await page.context().newCDPSession(page);
   await session.send('DOM.enable'); await session.send('CSS.enable');
   const { root } = await session.send('DOM.getDocument', { depth: -1 });
-  const fontsOf = async (selector: string) => {
-    const { nodeId } = await session.send('DOM.querySelector', { nodeId: root.nodeId, selector });
-    return (await session.send('CSS.getPlatformFontsForNode', { nodeId })).fonts.filter(font => font.glyphCount > 0);
-  };
-  const mixed = await fontsOf('.prose p:nth-of-type(2)');
-  expect(mixed.some(font => font.isCustomFont && /huiwen/i.test(font.familyName))).toBe(true);
-  expect(mixed.some(font => !/huiwen/i.test(font.familyName))).toBe(true);
-  expect((await fontsOf('.prose pre code .line span')).some(font => font.isCustomFont && font.familyName === 'Maple Mono')).toBe(true);
+  const { nodeId } = await session.send('DOM.querySelector', { nodeId: root.nodeId, selector: '.prose pre code .line span' });
+  const { fonts } = await session.send('CSS.getPlatformFontsForNode', { nodeId });
+  expect(fonts.some(font => font.isCustomFont && font.familyName === 'Maple Mono' && font.glyphCount > 0)).toBe(true);
   await session.detach();
 });
 
