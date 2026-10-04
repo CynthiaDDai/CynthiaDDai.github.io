@@ -2,7 +2,7 @@
 
 This guide is for changing the code: how the pieces fit together, where things live, and how to test them. To use the site, the other guides are enough.
 
-The design principles are short: the site is **terminal-inspired, not a terminal emulator**; **content comes first**, and every page works with plain links and without JavaScript; and **conventions beat compatibility**. Odd input, such as a file name with spaces, is rejected at build time with a clear message instead of being handled with extra code at runtime. The full design document is `terminal_personal_website_master_spec.md`.
+The design principles are short: the site is **terminal-inspired, not a terminal emulator**; **content comes first**, and every page works with plain links and without JavaScript; and **conventions beat compatibility**. Odd input, such as a file name with spaces, is rejected at build time with a clear message instead of being handled with extra code at runtime.
 
 ## Stack
 
@@ -114,6 +114,6 @@ nix-shell shell.nix --run 'npm run test:browser'
 
 - The site must be served from a domain root. Supporting a sub-path would need one place that prefixes every internal URL.
 - The full-text search index is embedded in every page and grows with the amount of content. Moving it to a separately loaded file is the fix once that matters.
-- The bundled Nerd Font (1.2 MB) and Huiwen Mincho (8 MB) are complete fonts, loaded only when a page needs their characters. Build-time subsetting to the glyphs the themes and content actually use would shrink them.
+- The bundled Nerd Font (1.2 MB), and any CJK webfont added in `fonts.css`, are complete fonts, loaded only when a page needs their characters. Build-time subsetting to the glyphs the themes and content actually use would shrink them.
 - Search text for MDX pages is taken from the source, so JSX expressions are indexed as words.
 - Astro prints an `use astro:head-inject` bundling warning for MDX. Static output is unaffected.

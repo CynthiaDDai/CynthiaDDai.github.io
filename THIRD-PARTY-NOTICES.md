@@ -7,9 +7,7 @@ This project includes or adapts the following work. Each keeps its own license.
 | `src/themes/1_shell/1_shell.omp.json`, `src/themes/if_tea/if_tea.omp.json` (and the reference copies used by the unit tests) | Unchanged copies of the [Oh My Posh](https://github.com/JanDeDobbeleer/oh-my-posh) themes `1_shell` and `if_tea` | MIT, below |
 | `src/themes/storm/` | Original prompt layout using the colors of the [Tokyo Night](https://github.com/enkia/tokyo-night-vscode-theme) Storm palette | MIT, below |
 | `src/themes/storm_day/`, `src/themes/paper/` | Light variants of `storm` with their own palettes | This project's MIT license |
-| `public/fonts/nerd-symbols-mono.woff2` | [Symbols Nerd Font Mono](https://github.com/ryanoasis/nerd-fonts) v3.4.0 | MIT, see `public/fonts/nerd-symbols-LICENSE.txt` |
-| `public/fonts/maple-mono-*.woff2` | [Maple Mono](https://github.com/subframe7536/maple-font) v7.9 | SIL Open Font License 1.1, see `public/fonts/maple-mono-LICENSE.txt` |
-| `public/fonts/huiwen-mincho.woff2` | [Huiwen Mincho, improved](https://github.com/bosswnx/huiwenmincho-improved), based on 汇文明朝体 by 特里王 | CC0 1.0, see `public/fonts/huiwen-mincho-LICENSE.txt` |
+| `public/fonts/` | Each font's source is listed in `public/fonts/README.txt` | The license file beside each font |
 
 npm dependencies (Astro, KaTeX, Shiki and others) are installed from the registry and carry their own licenses in `node_modules/`.
 

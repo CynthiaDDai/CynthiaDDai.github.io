@@ -153,7 +153,7 @@ Every font is set in `src/styles/fonts.css`, through four variables:
 
 ```css
 :root {
-  --font-cjk: 'Huiwen Mincho';
+  --font-cjk: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC';
   --font-mono: 'Maple Mono', var(--font-cjk), 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   --font-prose: 'Charter', 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, var(--font-cjk), serif;
   --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', var(--font-cjk), sans-serif;
@@ -169,13 +169,12 @@ Every font is set in `src/styles/fonts.css`, through four variables:
 
 A list is tried one character at a time: the browser uses the first font that has the character. Latin fonts have no Chinese characters, so Chinese text in any part of the site falls through to `--font-cjk`, and a page can mix English and Chinese without any markup.
 
-The site includes three fonts in `public/fonts/`:
+The site ships two fonts in `public/fonts/`, listed with their sources and licenses in `public/fonts/README.txt`:
 
 - **Maple Mono** (regular, italic, medium, semibold, bold; about 80 KB each) for `--font-mono`.
-- **Huiwen Mincho** for Chinese and Japanese. Its `@font-face` has a `unicode-range`, so the 8 MB file is downloaded only by pages that contain those characters, and then cached.
-- **Symbols Nerd Font** for prompt icons, also limited by `unicode-range`.
+- **Symbols Nerd Font** for prompt icons. Its `@font-face` has a `unicode-range`, so it is downloaded only when a prompt uses an icon.
 
-The other names in the lists are fonts already installed on visitors' systems.
+The other names are fonts already installed on visitors' systems; `--font-cjk` lists common Chinese system fonts on macOS, Windows and Linux.
 
 **Use a font installed on your visitors' systems:** put its name in the list. Nothing is downloaded, and visitors who don't have it get the next font in the list.
 
@@ -185,12 +184,25 @@ The other names in the lists are fonts already installed on visitors' systems.
 
 **Ship a font with the site:**
 
-1. Put its `.woff2` files in `public/fonts/`, with the font's license.
+1. Put its `.woff2` files in `public/fonts/`, with the font's license, and add it to `public/fonts/README.txt`.
 2. Add an `@font-face` for each file to `fonts.css`. Copy one of the existing rules and change the name, file and `font-weight`/`font-style`.
 3. Put the name at the start of a variable.
-4. Record the font in `THIRD-PARTY-NOTICES.md`.
 
-To restrict a font to one script, give its `@font-face` a `unicode-range`, as the Huiwen Mincho rule does.
+For example, to set Chinese text in [Huiwen Mincho](https://github.com/bosswnx/huiwenmincho-improved):
+
+```css
+@font-face {
+  font-family: 'Huiwen Mincho';
+  src: url('/fonts/huiwen-mincho.woff2') format('woff2');
+  font-display: swap;
+  size-adjust: 110%;
+  unicode-range: U+2E80-2FDF, U+3000-33FF, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF, U+20000-2FA1F;
+}
+:root { --font-cjk: 'Huiwen Mincho'; }
+```
+
+- `unicode-range` limits the font to Chinese and Japanese characters. Complete CJK fonts are several megabytes, and with this line only pages that contain those characters download it.
+- `size-adjust` scales the font's glyphs without changing anything else. Use it when one font looks smaller or larger than its neighbours at the same size.
 
 **Check:** in the browser's developer tools, select some text and open the "Fonts" (Firefox) or "Rendered fonts" (Chrome, under Computed) panel. It lists the fonts actually used.
 

@@ -36,6 +36,4 @@ On NixOS, run `nix-shell` first.
 
 ## License
 
-Code is MIT-licensed. Personal content (`src/content/` and the profile in `src/config/site.json`) is all rights reserved; replace it with your own when you fork. See [LICENSE](LICENSE).
-
-Included themes and fonts keep their own licenses; see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+See [LICENSE](LICENSE). Included themes and fonts keep their own licenses; see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
