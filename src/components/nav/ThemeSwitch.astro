@@ -1,0 +1,5 @@
+---
+// The one theme switch for wide screens, in the top right corner of every page: the theme's colors and its name.
+import { defaultTheme } from '../../lib/theme/registry';
+---
+<button class="theme-switch" type="button" data-cycle-theme aria-label="Switch color theme" title="Switch color theme"><span class="theme-swatch" aria-hidden="true"></span><span data-theme-name>{defaultTheme.name}</span></button>

@@ -47,6 +47,20 @@ test('profile values fill the wordmark, footers, contact page and fastfetch', as
   await expect(page.locator('.page-footer-line')).toHaveText(/^(Take your time\.|Read slowly\.)$/);
 });
 
+test('the theme switch and wordmark sit in the same place on every page', async ({ page }) => {
+  for (const width of [1440, 820]) {
+    await page.setViewportSize({ width, height: 900 });
+    const places = new Set<string>();
+    for (const path of ['/', '/blog', '/blog/placeholder-hello', '/no-such-page']) {
+      await page.goto(path);
+      const theme = await page.getByRole('button', { name: 'Switch color theme' }).boundingBox();
+      const wordmark = await page.locator('.home-wordmark, .site-wordmark').boundingBox();
+      places.add([theme!.x, theme!.y, wordmark!.x, wordmark!.y].map(Math.round).join(','));
+    }
+    expect([...places]).toHaveLength(1);
+  }
+});
+
 test('decorative mottos stay out of the accessible text, and every content page shares one footer', async ({ page }) => {
   await page.goto('/blog');
   const motto = page.locator('h1 .paired-motto');

@@ -8,9 +8,16 @@
 .home-page.home-content { height: auto; min-height: 100dvh; overflow: visible; }
 .home-content .terminal-stage { min-height: 70vh; flex-shrink: 0; }
 .home-header, .home-footer { flex-shrink: 0; }
+/* The home header has the content pages' top bar geometry, so the wordmark and theme switch never move. */
+.home-header { box-sizing: border-box; width: 100%; max-width: 1320px; min-height: 100px; margin: 0 auto; padding: 1.5rem 3rem; font-size: .78rem; }
 .home-footer { margin-top: auto; width: 100%; gap: 1rem; }
 .home-footer-dot { margin: 0 .55em; color: var(--terminal-accent-1); }
-.theme-footer { border: 0; display: inline-flex; align-items: center; gap: .75rem; color: var(--site-muted); padding: .5rem 0; }
+.theme-switch { border: 0; display: inline-flex; align-items: center; gap: .75rem; padding: .6rem 0; font-family: var(--font-mono); font-size: .75rem; color: var(--site-muted); }
+.theme-switch:hover, .theme-switch:focus-visible { color: var(--site-fg); }
+.theme-switch .theme-swatch { margin-right: .25rem; transition: transform .15s ease; }
+.theme-switch:hover .theme-swatch, .theme-switch:focus-visible .theme-swatch { transform: scale(1.25); }
+.home-caption { margin-left: 1.2rem; }
+.home-footer-feed { text-decoration: none; }
 .theme-swatch { height: .55rem; width: .55rem; border-radius: 50%; background: var(--terminal-accent-1); box-shadow: .25rem 0 0 var(--terminal-accent-2); }
 .edge-navigation { position: fixed; right: 0; top: 50%; transform: translateY(-50%); z-index: 10; font-family: var(--font-mono); }
 /* Only the handle and the open menu respond to the pointer; the hidden menu's empty box must not open it. */
@@ -31,7 +38,7 @@ h1 .paired-motto { margin-top: -.05em; font-size: .38em; letter-spacing: .55em; 
 .edge-paired .paired-text { font-size: .85rem; letter-spacing: .3em; color: var(--site-fg); }
 .edge-paired .paired-motto { margin: 0 .15rem 0 0; font-size: .68rem; letter-spacing: .25em; }
 /* A paper lantern hangs above the label. */
-.edge-lantern { width: 14px; height: 23px; fill: none; stroke: currentColor; stroke-width: 1; stroke-linecap: round; color: var(--terminal-error); }
+.edge-lantern { width: 22px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1; stroke-linecap: round; color: var(--terminal-error); }
 .edge-lantern-glow { fill: currentColor; fill-opacity: .14; }
 .edge-mark { color: var(--chrome-accent); }
 .edge-navigation nav { width: 280px; background: var(--site-bg); padding: 1.5rem 4rem 1.5rem 1.5rem; border-left: 1px solid var(--chrome-border); }
@@ -54,9 +61,6 @@ h1 .paired-motto { margin-top: -.05em; font-size: .38em; letter-spacing: .55em; 
 .site-wordmark span { color: var(--site-muted); }
 .path-separator { color: var(--site-muted); }
 .nav-actions { display: flex; align-items: center; gap: .6rem; }
-.theme-button { display: inline-flex; padding: .8rem 1.05rem .8rem .8rem; }
-.theme-button .theme-swatch { transition: transform .15s ease; }
-.theme-button:hover .theme-swatch, .theme-button:focus-visible .theme-swatch { transform: scale(1.25); }
 .mobile-nav { display: none; }
 .page-main { width: min(100% - 3rem, 760px); margin: 3rem auto 8rem; min-height: 50vh; }
 .page-main.wide { max-width: 880px; width: min(100% - 3rem, 880px); }
@@ -98,7 +102,7 @@ h1 { font-size: clamp(2.35rem, 4.3vw, 3.9rem); font-weight: 500; line-height: 1.
   .page-main, .page-main.wide, .article-main { width: min(100% - 8rem, 760px); }
 }
 @media (max-width: 850px) {
-  .top-nav { padding: 1.5rem; gap: 1rem; }
+  .top-nav, .home-header { padding: 1.5rem; gap: 1rem; }
 }
 @media (max-width: 700px), (pointer: coarse) {
   .page-footer { flex-wrap: wrap; }
