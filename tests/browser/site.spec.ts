@@ -123,7 +123,7 @@ test('discovered 1_shell theme completes, renders source colors and persists wit
   await input.fill('theme 1'); await input.press('Tab'); await expect(input).toHaveValue('theme 1_shell');
   await input.press('Enter'); await expect(page.locator('html')).toHaveAttribute('data-theme', '1_shell');
   const form = page.locator('.command-form');
-  await expect(form).toContainText('cynthia on');
+  await expect(form).toContainText('mira on');
   await expect(form).not.toContainText('<#');
   await expect(form.locator('.prompt-line')).toContainText(/\d+:\d{2} (AM|PM)/);
   expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(23, 25, 31)');
@@ -350,7 +350,7 @@ test('long paths, commands, and suggestions wrap fully on narrow screens', async
 test('fastfetch shows four website blocks, ssh opens a new tab and preserves the site', async ({ page, context }) => {
   await page.goto('/'); await command(page, 'fastfetch');
   await expect(page.locator('.fastfetch-heading')).toContainText(['USER', 'SYSTEM', 'ACTIVITY', 'NETWORK']);
-  await expect(page.locator('.fastfetch-block').first()).toContainText('Cynthia');
+  await expect(page.locator('.fastfetch-block').first()).toContainText('Mira');
   const { site: profile } = JSON.parse(await page.locator('#site-data').textContent() ?? '{}') as { site: { activityLimit: number } };
   await expect(page.locator('.fastfetch-block').nth(2).locator('a')).toHaveCount(profile.activityLimit);
   await expect(page.locator('.fastfetch-block').nth(3).locator('a[href="/contact"]')).toBeVisible();

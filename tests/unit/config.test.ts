@@ -36,7 +36,7 @@ describe('public URL configuration', () => {
     }
     expect(() => checkReleaseUrl('https://example.com')).toThrow('public domain');
     expect(() => checkReleaseUrl('http://localhost')).toThrow('public domain');
-    expect(() => checkReleaseUrl('https://cynthia.dev')).not.toThrow();
+    expect(() => checkReleaseUrl('https://mira.dev')).not.toThrow();
   });
 });
 
@@ -79,7 +79,7 @@ describe('site profile', () => {
   it('names each invalid field instead of failing later in a template', () => {
     const profile = valid();
     Object.assign(profile, {
-      wordmark: 'cynthia', homeFooter: 'writing', feed: ['/blog/'], activityLimit: 0, email: 'nope', github: 'github.com/me',
+      wordmark: 'mira', homeFooter: 'writing', feed: ['/blog/'], activityLimit: 0, email: 'nope', github: 'github.com/me',
       dateLocale: 'not a locale!', socials: [{ name: 'Bad', url: 'javascript:alert(1)' }], typo: true,
       friends: [{ alias: 'pal', name: 'A', url: 'https://a.test' }, { alias: 'pal', name: 'B', url: 'https://b.test' }, { alias: 'Bad Alias', name: 'C', url: 'https://c.test' }],
     });

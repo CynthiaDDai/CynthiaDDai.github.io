@@ -1,12 +1,12 @@
 {
-  "name": "Cynthia's space",
-  "owner": "Cynthia",
-  "user": "cynthia",
+  "name": "Mira's space",
+  "owner": "Mira",
+  "user": "mira",
   "host": "website",
   "description": "A quiet place for writing, projects, and things worth remembering.",
   "bio": "Writing, building, and thinking.",
   "wordmark": {
-    "name": "cynthia",
+    "name": "mira",
     "suffix": "’s space"
   },
   "caption": "a personal space",
@@ -27,11 +27,11 @@
     "/research"
   ],
   "email": "hello@placeholder.test",
-  "github": "https://github.com/placeholder-cynthia",
+  "github": "https://github.com/placeholder-mira",
   "socials": [
     {
       "name": "Mastodon",
-      "url": "https://social.placeholder.test/@cynthia"
+      "url": "https://social.placeholder.test/@mira"
     }
   ],
   "friends": [

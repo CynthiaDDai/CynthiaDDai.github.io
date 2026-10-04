@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import shellSource from '../../1_shell.omp.json';
+import shellSource from '../fixtures/themes/1_shell.omp.json';
 import installedShell from '../../src/themes/1_shell/1_shell.omp.json';
-import teaSource from '../../if_tea.omp.json';
+import teaSource from '../fixtures/themes/if_tea.omp.json';
 import installedTea from '../../src/themes/if_tea/if_tea.omp.json';
 import { createThemeCatalog } from '../../src/lib/theme/catalog';
 import { themes, defaultTheme } from '../../src/lib/theme/registry';
@@ -13,7 +13,7 @@ import { mobilePrompt } from '../../src/lib/theme/mobile';
 import storm from '../../src/themes/storm/storm.omp.json';
 import stormDay from '../../src/themes/storm_day/storm_day.omp.json';
 
-const context = { user: 'cynthia', host: 'website', cwd: '~/blog/long-page', status: 'ok' as const,
+const context = { user: 'mira', host: 'website', cwd: '~/blog/long-page', status: 'ok' as const,
   now: new Date(2026, 9, 3, 15, 4, 5),
   pathLinks: [{ label: '~', path: '/' }, { label: 'blog', path: '/blog' }, { label: 'long-page', path: '/blog/long-page' }],
 };
@@ -67,7 +67,7 @@ describe('folder-based theme discovery', () => {
     expect(shell.mobile).toBeUndefined();
     const html = renderPrompt(mobilePrompt(shell), context).map(line => line.html).join('');
     expect(html).toContain('href="/blog/long-page"');
-    expect(html).not.toMatch(/Saturday|cynthia|website/);
+    expect(html).not.toMatch(/Saturday|mira|website/);
     for (const invalid of [{ prompt: {}, unknown: true }, { mode: null }, { mode: 'sepia' }]) {
       expect(() => createThemeCatalog({ '/themes/a/native.omp.json': shellSource }, {}, { fallback: { invalidCompanion: 'error' } }, {
         '/themes/a/native.omp.json': invalid,
@@ -143,7 +143,7 @@ describe('palette-less Oh My Posh import', () => {
     const bare = parseOhMyPoshTheme({ blocks: [{ type: 'prompt', segments: [{ type: 'session' }] },
       { type: 'prompt', alignment: 'right', segments: [{ type: 'text', template: 'right prompt' }] }] });
     const lines = renderPrompt(bare, context);
-    expect(lines[0].html).toContain('cynthia@website');
+    expect(lines[0].html).toContain('mira@website');
     expect(lines.at(-1)?.alignment).toBe('left');
     expect(lines.at(-1)?.html).toContain('href="/blog/long-page"');
   });
@@ -236,7 +236,7 @@ describe('documented Oh My Posh rendering rules', () => {
     expect(renderPrompt(make('join'), context)[0].html).toContain('firstsecond');
     expect(renderPrompt(make('first_match'), context)[0].html).toContain('>first</span>');
     expect(renderPrompt(make('first_match'), { ...context, status: 'error' })[0].html).toContain('>error</span>');
-    expect(expandTemplate(' left \n {{- .UserName -}} \n right ', context)).toBe(' leftcynthiaright ');
+    expect(expandTemplate(' left \n {{- .UserName -}} \n right ', context)).toBe(' leftmiraright ');
     const overridden = adaptOhMyPoshTheme(make('join'), { segmentOverrides: { text: 'replacement' } });
     expect(renderPrompt(overridden.terminal, context)[0].html).toContain('>replacement</span>');
   });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import source from '../../tokyo_slim_storm_v1_4.omp.json';
+import source from '../fixtures/themes/tokyo_slim_storm_v1_4.omp.json';
 import stormSource from '../../src/themes/storm/storm.omp.json';
 import { normalizePath, resolvePath, listChildren, breadcrumbs, pathFromUrl, type SiteEntry } from '../../src/lib/navigation/filesystem';
 import { buildContentTree, type ContentSource } from '../../src/lib/content/tree';
@@ -24,7 +24,7 @@ const sources: ContentSource[] = [
 const entries: SiteEntry[] = buildContentTree(sources).entries;
 const context: CommandContext = {
   cwd: '/blog/attention', previousPath: '/projects', entries,
-  owner: 'Cynthia', host: 'website', bio: 'Writing and building.', email: '', github: '', socials: [], activityLimit: 3, fastfetch, friends,
+  owner: 'Mira', host: 'website', bio: 'Writing and building.', email: '', github: '', socials: [], activityLimit: 3, fastfetch, friends,
   theme: { current: { id: 'storm' }, set: id => id === 'paper', available: [{ id: 'storm', name: 'Storm' }, { id: 'paper', name: 'Paper' }] },
 };
 
@@ -146,7 +146,7 @@ describe('fastfetch configuration and friend links', () => {
     expect(result.kind).toBe('fastfetch');
     if (result.kind === 'fastfetch') {
       expect(result.sections.map(section => section.name)).toEqual(['USER', 'SYSTEM', 'ACTIVITY', 'NETWORK']);
-      expect(result.sections[0].rows[0]).toEqual({ label: 'name', value: 'Cynthia', path: '/about' });
+      expect(result.sections[0].rows[0]).toEqual({ label: 'name', value: 'Mira', path: '/about' });
       expect(result.sections[1].rows.find(row => row.label === 'pages')?.value).toBe(String(entries.length));
       expect(result.sections[2].rows).toHaveLength(1);
       expect(result.sections[3].rows.map(row => row.path)).toContain('mailto:hello@example.com');

@@ -27,9 +27,9 @@ test('dev mobile uses the compact fallback with a saved theme that has no mobile
   await page.locator('.mobile-home-index [data-open-command]').click();
   const panel = page.getByRole('dialog', { name: 'Command', exact: true });
   await panel.locator('[data-command="fastfetch"]').click();
-  await expect(panel.locator('.fastfetch')).toContainText('Cynthia');
+  await expect(panel.locator('.fastfetch')).toContainText('Mira');
   await panel.locator('[data-manual-command] summary').click();
-  await expect(panel.locator('.mobile-command-form')).not.toContainText('cynthia on');
+  await expect(panel.locator('.mobile-command-form')).not.toContainText('mira on');
   await expect(panel.locator('.mobile-command-form')).toContainText('❯');
   await expect(page.locator('vite-error-overlay')).toHaveCount(0);
 });

@@ -27,14 +27,14 @@ test('feed and sitemap follow site.json feed directories, drafts and examples', 
 
 test('profile values fill the wordmark, footers, contact page and fastfetch', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('.home-wordmark')).toHaveText('cynthia’s space');
+  await expect(page.locator('.home-wordmark')).toHaveText('mira’s space');
   await expect(page.locator('.home-caption')).toHaveText('a personal space');
   await expect(page.locator('.home-footer > span').first()).toHaveText('writing · building · thinking');
   await command(page, 'fastfetch');
   const network = page.locator('.fastfetch-block').nth(3);
   await expect(network.locator('a[href="mailto:hello@placeholder.test"]')).toBeVisible();
-  await expect(network.locator('a[href="https://github.com/placeholder-cynthia"]')).toBeVisible();
-  await expect(network.locator('a[href="https://social.placeholder.test/@cynthia"]')).toBeVisible();
+  await expect(network.locator('a[href="https://github.com/placeholder-mira"]')).toBeVisible();
+  await expect(network.locator('a[href="https://social.placeholder.test/@mira"]')).toBeVisible();
   await command(page, 'ssh');
   await expect(page.locator('.command-rows dt').filter({ hasText: /^placeholder-friend$/ })).toHaveCount(1);
   await page.goto('/contact');
@@ -60,7 +60,7 @@ test('every document uses the article layout and returns to its parent by title'
   await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'website');
   await page.goto('/projects/placeholder-tool');
   await expect(page.locator('.status')).toHaveText('prototype');
-  await expect(page.getByRole('link', { name: 'Source code ↗' })).toHaveAttribute('href', 'https://github.com/placeholder-cynthia/placeholder-tool');
+  await expect(page.getByRole('link', { name: 'Source code ↗' })).toHaveAttribute('href', 'https://github.com/placeholder-mira/placeholder-tool');
   await expect(page.getByRole('link', { name: 'Visit project ↗' })).toBeVisible();
 });
 
@@ -137,7 +137,7 @@ test('a grouped directory lists works under status headings with their own links
   await expect(work.locator('.card-prompt')).toContainText('✓');
   await expect(page.locator('.prompt-card').filter({ hasText: 'Placeholder: a preprint' }).locator('.card-prompt')).toContainText('~');
   await expect(work.locator('.card-name')).toHaveText('Placeholder: a published work');
-  await expect(work.locator('.card-output')).toContainText('2025-06-01 · Cynthia Placeholder, A. Coauthor · Journal of Placeholders');
+  await expect(work.locator('.card-output')).toContainText('2025-06-01 · Mira Placeholder, A. Coauthor · Journal of Placeholders');
   await expect(work.getByRole('link', { name: 'arXiv ↗' })).toHaveAttribute('href', 'https://arxiv.org/abs/0000.00000');
   await expect(work.getByRole('link', { name: 'Placeholder: a published work' })).toHaveAttribute('href', '/papers/placeholder-published');
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
@@ -147,7 +147,7 @@ test('a grouped directory lists works under status headings with their own links
   await page.goBack();
   await work.click({ position: { x: 12, y: 12 } });
   await expect(page).toHaveURL('/papers/placeholder-published');
-  await expect(page.locator('.article-byline')).toHaveText('Cynthia Placeholder, A. Coauthor');
+  await expect(page.locator('.article-byline')).toHaveText('Mira Placeholder, A. Coauthor');
   await expect(page.locator('.article-meta')).toContainText('Journal of Placeholders');
   await expect(page.locator('.project-links').getByRole('link', { name: 'arXiv ↗' })).toBeVisible();
   // An ordinary listing uses the same prompts; a directory's path ends in /, and a title its path already says is not repeated.

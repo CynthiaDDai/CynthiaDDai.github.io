@@ -4,7 +4,7 @@ description: "Dummy project for testing. Replace or delete."
 date: 2026-08-01
 tags: [placeholder]
 status: prototype
-repo: https://github.com/placeholder-cynthia/placeholder-tool
+repo: https://github.com/placeholder-mira/placeholder-tool
 demo: https://placeholder-tool.placeholder.test
 ---
 
