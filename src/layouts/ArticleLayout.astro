@@ -14,7 +14,14 @@ const { title, description, date, updated, tags, example, headings, parentTitle,
 const path = pathFromUrl(Astro.url.pathname);
 const parentPath = normalizePath('..', path);
 const linkList = Object.entries(links);
-const toc = headings.filter(heading => heading.depth === 2);
+// Sections (##) with their subsections (###), drawn as a tree. Footnotes get a generated heading; it is not a section.
+const sections = headings.filter(heading => heading.depth <= 3 && heading.depth >= 2 && heading.slug !== 'footnote-label')
+  .reduce<{ heading: MarkdownHeading; children: MarkdownHeading[] }[]>((tree, heading) => {
+    if (heading.depth === 3 && tree.length) tree.at(-1)!.children.push(heading);
+    else tree.push({ heading, children: [] });
+    return tree;
+  }, []);
+const tocSize = sections.reduce((size, section) => size + 1 + section.children.length, 0);
 const formatDate = (value: Date) => value.toLocaleDateString(site.dateLocale, { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 ---
 <BaseLayout title={title} description={description} article>
@@ -30,7 +37,15 @@ const formatDate = (value: Date) => value.toLocaleDateString(site.dateLocale, { 
         {tags.length > 0 && <ul class="tag-list" aria-label="Tags">{tags.map(tag => <li>{tag}</li>)}</ul>}
         {(repo || demo || linkList.length > 0) && <div class="project-links">{repo && <a href={repo}>Source code ↗</a>}{demo && <a href={demo}>Visit project ↗</a>}{linkList.map(([label, url]) => <a href={url}>{label}{/^https?:/.test(url) && ' ↗'}</a>)}</div>}
       </header>
-      {toc.length >= 2 && <details class="toc"><summary>On this page</summary><nav aria-label="Table of contents"><ol>{toc.map(heading => <li><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ol></nav></details>}
+      {tocSize >= 2 && <nav class="toc" aria-label="Table of contents"><div class="toc-body">
+        <p class="toc-label" aria-hidden="true">on this page</p>
+        <ol>{sections.map(({ heading, children }, index) => {
+          const last = index === sections.length - 1;
+          return <li><a href={`#${heading.slug}`}><span class="toc-branch" aria-hidden="true">{last ? '└' : '├'}</span><span>{heading.text}</span></a>
+            {children.length > 0 && <ol>{children.map((child, childIndex) => <li><a href={`#${child.slug}`}><span class="toc-branch" aria-hidden="true">{last ? ' ' : '│'} {childIndex === children.length - 1 ? '└' : '├'}</span><span>{child.text}</span></a></li>)}</ol>}
+          </li>;
+        })}</ol>
+      </div></nav>}
       <div class="prose"><slot /></div>
       {updated && <p class="updated">Updated <time datetime={updated.toISOString()}>{formatDate(updated)}</time></p>}
     </article>

@@ -32,11 +32,24 @@
 .prose .katex { font-size: 1.05em; }
 .prose .katex-display { overflow-x: auto; overflow-y: hidden; padding: .7rem 0; }
 .prose .footnotes { font-size: .9rem; color: var(--prose-muted); border-top: 1px solid var(--chrome-border); margin-top: 3rem; }
-.toc { font-family: var(--font-mono); font-size: .78rem; padding: 1rem 0; border-top: 1px solid var(--chrome-border); border-bottom: 1px solid var(--chrome-border); margin-bottom: 2.8rem; color: var(--site-muted); }
-.toc summary { cursor: pointer; }
-.toc ol { padding-left: 1.5rem; line-height: 2; }
-.toc a { text-decoration: none; }
-.toc a:hover { text-decoration: underline; }
+/* Table of contents: a tree under the heading; beside the article, following the reader, where there is room. */
+.toc { font-family: var(--font-mono); font-size: .78rem; line-height: 1.6; color: var(--site-muted); margin-bottom: 2.8rem; }
+.toc-label { margin: 0 0 .6rem; color: var(--terminal-accent-1); letter-spacing: .04em; }
+.toc ol { list-style: none; margin: 0; padding: 0; }
+.toc a { display: flex; gap: .6ch; padding: .2rem 0; color: inherit; text-decoration: none; }
+.toc a:hover { color: var(--terminal-cyan); }
+.toc a:hover span:last-child { text-decoration: underline; }
+.toc-branch { flex: none; white-space: pre; color: var(--terminal-accent-1); opacity: .55; }
+.toc a[aria-current] { color: var(--terminal-accent-1); }
+.toc a[aria-current] .toc-branch { opacity: 1; }
+@media (min-width: 1280px) and (pointer: fine) {
+  article { position: relative; }
+  .toc { position: absolute; top: 0; bottom: 0; right: calc(100% + 3.5rem); width: 13rem; margin: 0; }
+  .toc-body { position: sticky; top: 2.5rem; max-height: calc(100svh - 5rem); overflow-y: auto; overscroll-behavior: contain; }
+}
+@media (max-width: 1279px), (pointer: coarse) {
+  .toc ol ol { display: none; }
+}
 .updated { color: var(--site-muted); font-family: var(--font-mono); font-size: .7rem; margin-top: 3rem; }
 .article-bottom { font-family: var(--font-mono); font-size: .75rem; border-top: 1px solid var(--chrome-border); margin-top: 4rem; padding-top: 1.5rem; display: flex; justify-content: space-between; gap: 1rem; }
 .article-bottom a { text-decoration: none; color: var(--site-muted); }

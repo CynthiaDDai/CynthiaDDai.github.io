@@ -39,7 +39,9 @@
 .site-wordmark span { color: var(--site-muted); }
 .path-separator { color: var(--site-muted); }
 .nav-actions { display: flex; align-items: center; gap: .6rem; }
-.theme-button { font-size: 1.2rem; }
+.theme-button { display: inline-flex; padding: .8rem 1.05rem .8rem .8rem; }
+.theme-button .theme-swatch { transition: transform .15s ease; }
+.theme-button:hover .theme-swatch, .theme-button:focus-visible .theme-swatch { transform: scale(1.25); }
 .mobile-nav { display: none; }
 .page-main { width: min(100% - 3rem, 760px); margin: 3rem auto 8rem; min-height: 50vh; }
 .page-main.wide { max-width: 880px; width: min(100% - 3rem, 880px); }

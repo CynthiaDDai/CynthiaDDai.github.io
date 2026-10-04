@@ -382,4 +382,18 @@ document.querySelectorAll<HTMLButtonElement>('[data-toggle-edge]').forEach(butto
   for (const event of ['mouseenter', 'mouseleave', 'focusin']) menu.addEventListener(event, sync);
   menu.addEventListener('focusout', () => queueMicrotask(sync));
 });
+
+// The table of contents marks the section being read: the last heading above the upper third of the window.
+const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('.toc a')];
+const tocTargets = tocLinks.map(link => document.getElementById(decodeURIComponent(link.hash.slice(1))));
+let tocFrame = 0;
+const markSection = () => {
+  tocFrame = 0;
+  const current = tocTargets.findLastIndex(target => target && target.getBoundingClientRect().top < innerHeight / 3);
+  tocLinks.forEach((link, index) => index === current ? link.setAttribute('aria-current', 'location') : link.removeAttribute('aria-current'));
+};
+if (tocLinks.length) {
+  addEventListener('scroll', () => { tocFrame ||= requestAnimationFrame(markSection); }, { passive: true });
+  markSection();
+}
 document.documentElement.dataset.siteReady = 'true';

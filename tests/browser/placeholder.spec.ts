@@ -64,13 +64,55 @@ test('every document uses the article layout and returns to its parent by title'
   await expect(page.getByRole('link', { name: 'Visit project ↗' })).toBeVisible();
 });
 
+test('Latin text uses the bundled fonts and Chinese falls through to the CJK font, downloaded only when needed', async ({ page }) => {
+  const fontRequests: string[] = [];
+  page.on('request', request => { if (request.url().includes('/fonts/')) fontRequests.push(new URL(request.url()).pathname); });
+  await page.goto('/');
+  await page.evaluate(() => document.fonts.ready);
+  expect(fontRequests).toContain('/fonts/maple-mono-regular.woff2');
+  expect(fontRequests).not.toContain('/fonts/huiwen-mincho.woff2');
+  await page.goto('/blog/placeholder-hello');
+  await page.evaluate(() => document.fonts.ready);
+  const session = await page.context().newCDPSession(page);
+  await session.send('DOM.enable'); await session.send('CSS.enable');
+  const { root } = await session.send('DOM.getDocument', { depth: -1 });
+  const fontsOf = async (selector: string) => {
+    const { nodeId } = await session.send('DOM.querySelector', { nodeId: root.nodeId, selector });
+    return (await session.send('CSS.getPlatformFontsForNode', { nodeId })).fonts.filter(font => font.glyphCount > 0);
+  };
+  const mixed = await fontsOf('.prose p:nth-of-type(2)');
+  expect(mixed.some(font => font.isCustomFont && /huiwen/i.test(font.familyName))).toBe(true);
+  expect(mixed.some(font => !/huiwen/i.test(font.familyName))).toBe(true);
+  expect((await fontsOf('.prose pre code .line span')).some(font => font.isCustomFont && font.familyName === 'Maple Mono')).toBe(true);
+  await session.detach();
+});
+
+test('on wide screens the table of contents sits beside the article and marks the section being read', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/blog/the-shape-of-attention');
+  await expect(page.locator('html')).toHaveAttribute('data-site-ready', 'true');
+  const toc = page.getByRole('navigation', { name: 'Table of contents' });
+  const links = toc.getByRole('link');
+  const [tocBox, proseBox] = [await toc.boundingBox(), await page.locator('.prose').boundingBox()];
+  expect(tocBox!.x + tocBox!.width).toBeLessThan(proseBox!.x);
+  await page.locator('#a-weighted-conversation').evaluate(heading => heading.scrollIntoView());
+  await expect(links.filter({ hasText: 'A weighted conversation' })).toHaveAttribute('aria-current', 'location');
+  await expect(toc.locator('[aria-current]')).toHaveCount(1);
+  await expect(toc).toBeInViewport();
+  await page.setViewportSize({ width: 1000, height: 900 });
+  const narrow = await toc.boundingBox();
+  expect(narrow!.y).toBeLessThan((await page.locator('.prose').boundingBox())!.y);
+});
+
 test('a placeholder post renders its asset, math, contents, footnote and absolute links', async ({ page }) => {
   await page.goto('/blog/placeholder-hello');
   const image = page.getByRole('img', { name: 'Placeholder diagram' });
   await expect(image).toBeVisible();
   expect(await image.evaluate(element => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
   await expect(page.locator('.katex').first()).toBeVisible();
-  await expect(page.locator('details.toc')).toContainText('On this page');
+  const toc = page.getByRole('navigation', { name: 'Table of contents' });
+  await expect(toc.getByRole('link')).toHaveText(['├First section', '└Second section']);
+  await expect(toc).not.toContainText('Footnotes');
   await expect(page.locator('.footnotes')).toContainText('A placeholder footnote.');
   await expect(page.locator('.updated time')).toHaveText('September 28, 2026');
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);

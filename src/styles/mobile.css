@@ -90,8 +90,7 @@ html:has(dialog[open]) { overflow: hidden; }
   .article-deck { font-size: 1.15rem; }
   .article-bottom { flex-wrap: wrap; margin-top: 2.5rem; padding-top: .75rem; }
   .article-bottom a, .project-links a, .toc a, .page-footer a { display: inline-flex; align-items: center; min-height: 44px; }
-  .toc { padding: .5rem 0; margin-bottom: 2rem; }
-  .toc summary { display: flex; align-items: center; min-height: 44px; }
+  .toc { margin-bottom: 2rem; }
   .toc a { line-height: 1.6; }
   .prose { min-width: 0; }
   .prose table { display: block; max-width: 100%; overflow-x: auto; }
