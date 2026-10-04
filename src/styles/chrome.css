@@ -13,18 +13,25 @@
 .theme-footer { border: 0; display: inline-flex; align-items: center; gap: .75rem; color: var(--site-muted); padding: .5rem 0; }
 .theme-swatch { height: .55rem; width: .55rem; border-radius: 50%; background: var(--terminal-accent-1); box-shadow: .25rem 0 0 var(--terminal-accent-2); }
 .edge-navigation { position: fixed; right: 0; top: 50%; transform: translateY(-50%); z-index: 10; font-family: var(--font-mono); }
-.edge-menu { position: relative; }
-.edge-handle { border: 0; cursor: pointer; position: absolute; right: 0; top: 50%; transform: translateY(-50%); min-height: 160px; padding: 1.2rem 0; width: 48px; display: flex; justify-content: center; align-items: center; gap: 1rem; flex-direction: column; color: var(--site-muted); }
+/* Only the handle and the open menu respond to the pointer; the hidden menu's empty box must not open it. */
+.edge-menu { position: relative; pointer-events: none; }
+.edge-handle, .edge-menu > nav { pointer-events: auto; }
+.edge-handle { border: 0; cursor: pointer; position: absolute; right: 0; top: 50%; transform: translateY(-50%); min-height: 160px; padding: 1.2rem 14px 1.2rem 0; width: 48px; display: flex; justify-content: center; align-items: center; gap: 1rem; flex-direction: column; color: var(--site-muted); }
 .mobile-nav > summary::-webkit-details-marker { display: none; }
 .edge-handle::before { content: ''; width: 1px; top: 0; bottom: 0; background: var(--chrome-accent); opacity: .35; position: absolute; right: 12px; }
 .edge-label { font-size: .7rem; writing-mode: vertical-rl; letter-spacing: .15em; }
-.motto.edge-motto { writing-mode: vertical-rl; margin: 0; font-size: 1rem; letter-spacing: .4em; color: var(--site-fg); opacity: .75; }
-.edge-motto + .edge-label { font-size: .6rem; }
-/* Decorative words (Motto.astro): set in the CJK font, quieter than the label they accompany. */
-.motto { margin-left: .9em; font-family: var(--font-cjk), serif; font-weight: 400; letter-spacing: .25em; color: var(--site-muted); white-space: nowrap; }
-.title-motto { display: block; margin: 0 0 1rem; font-size: 1rem; letter-spacing: .5em; color: var(--terminal-accent-1); opacity: .85; }
+/* A label and its motto (Paired.astro) read as one unit: the motto sits right under the label, in the CJK font,
+   sized in proportion to it. column-reverse would put the motto on top. */
+.paired { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 0; vertical-align: top; }
+.paired-motto { margin-top: -.15em; font-family: var(--font-cjk), serif; font-weight: 400; font-size: 1em; letter-spacing: .3em; line-height: 1.1; color: var(--site-muted); white-space: nowrap; }
+h1 .paired-motto { margin-top: -.05em; font-size: .38em; letter-spacing: .55em; color: var(--terminal-accent-1); }
+/* The index handle is written vertically: the motto and "index" stand side by side as two columns. */
+.edge-paired { writing-mode: vertical-rl; flex-direction: column; align-items: flex-start; }
+.edge-paired .paired-motto { margin: 0 .1rem 0 0; }
+.edge-paired .paired-text { font-size: .75rem; letter-spacing: .5em; }
+.edge-paired .paired-motto { font-size: .95rem; letter-spacing: .35em; color: var(--site-fg); opacity: .8; }
 .edge-mark { color: var(--chrome-accent); }
-.edge-navigation nav { width: 230px; background: var(--site-bg); padding: 1.5rem 2.8rem 1.5rem 1.5rem; border-left: 1px solid var(--chrome-border); }
+.edge-navigation nav { width: 280px; background: var(--site-bg); padding: 1.5rem 4rem 1.5rem 1.5rem; border-left: 1px solid var(--chrome-border); }
 .edge-navigation nav a { display: flex; align-items: center; gap: .75rem; padding: .65rem 0; color: var(--site-muted); text-decoration: none; font-size: .85rem; }
 .edge-navigation nav a:hover { color: var(--terminal-cyan); }
 .edge-navigation nav a[aria-current] { color: var(--terminal-accent-1); }

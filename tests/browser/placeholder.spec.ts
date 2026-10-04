@@ -49,12 +49,12 @@ test('profile values fill the wordmark, footers, contact page and fastfetch', as
 
 test('decorative mottos stay out of the accessible text, and every content page shares one footer', async ({ page }) => {
   await page.goto('/blog');
-  const motto = page.locator('.title-motto');
+  const motto = page.locator('h1 .paired-motto');
   await expect(motto).toHaveText('且听风吟');
   await expect(motto).toHaveAttribute('aria-hidden', 'true');
   await expect(motto).toHaveAttribute('lang', 'zh');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Blog');
-  await expect(page.locator('.edge-motto')).toHaveText('开卷如晤');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName('Blog');
+  await expect(page.locator('.edge-paired .paired-motto')).toHaveText('开卷如晤');
   await expect(page.locator('.edge-handle')).toHaveAccessibleName('Explore the site');
   await expect(page.locator('#search-title')).toHaveText('Search this space寻寻觅觅');
   for (const path of ['/blog', '/blog/placeholder-hello', '/no-such-page']) {
@@ -65,7 +65,7 @@ test('decorative mottos stay out of the accessible text, and every content page 
     await expect(footer.locator('.page-footer-line')).toHaveText(/^(Take your time\.|Read slowly\.)$/);
   }
   await page.goto('/blog/placeholder-hello');
-  await expect(page.locator('.toc-label .motto')).toHaveText('按图索骥');
+  await expect(page.locator('.toc-label .paired-motto')).toHaveText('按图索骥');
 });
 
 test('every document uses the article layout and returns to its parent by title', async ({ page }) => {
