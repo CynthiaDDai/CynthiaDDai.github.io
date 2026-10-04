@@ -120,7 +120,7 @@ Empty fields are simply left out of the site; nothing shows "no email".
 ```json
 {
   "default": "storm",
-  "order": ["storm", "storm_day", "paper"],
+  "order": ["storm", "pine_ink"],
   "fallback": {
     "web": {},
     "mobile": "compact",
