@@ -1,7 +1,4 @@
 :root {
-  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-  --font-prose: 'Charter', 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, serif;
-  --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --measure: 70ch;
 }
 *, *::before, *::after { box-sizing: border-box; }

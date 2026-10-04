@@ -8,6 +8,8 @@ tags: [placeholder, testing]
 
 This placeholder post exercises the RSS feed, recent activity, an image kept in an ignored `_assets` folder, and an absolute internal link.
 
+Mixed scripts: 这一段是中文占位文字，用来检查中文字体。
+
 ![Placeholder diagram](./_assets/placeholder.svg)
 
 Continue with the [placeholder topic](/notes/placeholder-topic) or read the [placeholder study](/research/placeholder-study).
