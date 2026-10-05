@@ -71,7 +71,7 @@ The keyboard hints on the 404 page are part of the template, not `site.json`.
 
 ### Mottos
 
-A motto is a few decorative Chinese words paired with an English label, such as a four-character idiom. The motto sits tightly under its label, set in `--font-cjk` and sized in proportion to it, so the two read as one unit. Mottos are marked as Chinese (`lang="zh"`); for another language, change that attribute in `Paired.astro`. Mottos are hidden from screen readers and from the site's search, and never replace the label. Leave them out and nothing changes. The pairing lives in `src/components/content/Paired.astro`, and its spacing and sizes in the `.paired` rules of `src/styles/chrome.css`.
+A motto is a few decorative Chinese words paired with an English label, such as a four-character idiom. The motto sits tightly under its label, set in `--font-cjk` and sized in proportion to it, so the two read as one unit. Mottos are marked as Chinese (`lang="zh"`); for another language, change that attribute in `Paired.astro`. Mottos are hidden from screen readers and from the site's search, and never replace the label. Leave them out and nothing changes. The pairing lives in `src/components/content/Paired.astro`, and its spacing and sizes in the `.paired` rules of `src/styles/chrome.css`. A page title's motto is set differently, beside the title like a seal: four characters become two vertical columns, read from the right. That lives in `Seal.astro` and the `.seal` rules.
 
 ```json
 "mottos": { "index": "一览无余", "search": "上下求索", "toc": "纲举目张" },
@@ -85,7 +85,7 @@ A motto is a few decorative Chinese words paired with an English label, such as 
 | The search dialog's heading | `mottos.search` |
 | The table of contents label | `mottos.toc` |
 | A word in the home footer | `homeFooter` |
-| Under a page's title | `motto` in the page's frontmatter, or in a folder's `index.md` (see [Writing](writing.md#frontmatter)) |
+| Beside a page's title, like a seal: two vertical columns, read from the right | `motto` in the page's frontmatter, or in a folder's `index.md` (see [Writing](writing.md#frontmatter)) |
 | Under the 404 title | `notFound.motto` |
 
 ### Theme switch

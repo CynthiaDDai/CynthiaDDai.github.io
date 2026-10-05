@@ -85,7 +85,7 @@ html:has(dialog[open]) { overflow: hidden; }
   .mobile-page-tools > div { display: flex; flex: 0 0 auto; gap: .1rem; }
   .mobile-page-tools button { min-width: 44px; min-height: 44px; font-size: 1rem; }
   .page-intro { margin-bottom: 2rem; }
-  h1 { font-size: clamp(2rem, 8vw, 2.8rem); overflow-wrap: anywhere; }
+  h1 { font-size: clamp(1.7rem, 7vw, 2.2rem); overflow-wrap: anywhere; }
   .page-description { font-size: 1rem; }
   .article-heading { margin-bottom: 2rem; }
   .article-deck { font-size: 1.15rem; }

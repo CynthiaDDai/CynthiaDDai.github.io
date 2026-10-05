@@ -77,8 +77,8 @@ test('the theme switch shows each theme’s label from site.json, or its name', 
 
 test('decorative mottos stay out of the accessible text, and every content page shares one footer', async ({ page }) => {
   await page.goto('/blog');
-  const motto = page.locator('h1 .paired-motto');
-  await expect(motto).toHaveText('且听风吟');
+  const motto = page.locator('h1 .seal');
+  await expect(motto.locator('span')).toHaveText(['且听', '风吟']);
   await expect(motto).toHaveAttribute('aria-hidden', 'true');
   await expect(motto).toHaveAttribute('lang', 'zh');
   await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName('Blog');
@@ -141,6 +141,9 @@ test('on wide screens the table of contents sits beside the article and marks th
   const links = toc.getByRole('link');
   const [tocBox, proseBox] = [await toc.boundingBox(), await page.locator('.prose').boundingBox()];
   expect(tocBox!.x + tocBox!.width).toBeLessThan(proseBox!.x);
+  await page.setViewportSize({ width: 1340, height: 900 });
+  expect((await toc.boundingBox())!.x).toBeGreaterThanOrEqual(0);
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.locator('#a-weighted-conversation').evaluate(heading => heading.scrollIntoView());
   await expect(links.filter({ hasText: 'A weighted conversation' })).toHaveAttribute('aria-current', 'location');
   await expect(toc.locator('[aria-current]')).toHaveCount(1);

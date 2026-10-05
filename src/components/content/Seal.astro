@@ -1,0 +1,8 @@
+---
+// A page's motto set as a square seal, read like a carved one: the right column first, top to bottom.
+// It is decorative, so assistive technology skips it and the title alone names the page.
+interface Props { text: string; }
+const characters = [...Astro.props.text];
+const half = Math.ceil(characters.length / 2);
+---
+<span class="seal" lang="zh" aria-hidden="true"><span>{characters.slice(0, half).join('')}</span><span>{characters.slice(half).join('')}</span></span>

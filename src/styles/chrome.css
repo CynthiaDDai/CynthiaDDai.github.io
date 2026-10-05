@@ -32,10 +32,18 @@
 .paired { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 0; vertical-align: top; }
 .paired-motto { margin-top: -.15em; font-family: var(--font-cjk), serif; font-weight: 400; font-size: .82em; letter-spacing: .12em; line-height: 1.1; color: var(--site-muted); white-space: nowrap; }
 .home-footer .paired-motto, .theme-switch .paired-motto { margin-top: .1em; font-size: 1em; letter-spacing: .15em; }
-/* Under a page title the motto is set flush right, like a seal at the end of a line; the negative margin
-   cancels the tracking after the last character so it ends exactly under the title. */
-h1 .paired { align-items: flex-end; }
-h1 .paired-motto { margin: -.05em -.55em 0 0; font-size: .38em; letter-spacing: .55em; color: var(--terminal-accent-1); }
+/* A page's motto follows its title like a name seal after a signature (Seal.astro): a carved seal in two vertical columns,
+   the first on the right, sunk below the title's baseline. Like a real seal it keeps its own cinnabar and paper colors in
+   every theme, and a noise mask wears the ink away in places, so the characters stay clean while the seal looks pressed. */
+.sealed { display: flex; align-items: flex-end; gap: .35em; }
+.seal {
+  flex: none; margin-bottom: -.3em; padding: .14em .12em .1em; border-radius: .1em; writing-mode: vertical-rl;
+  font: 400 .36em/1.1 var(--font-cjk), serif; letter-spacing: -.04em;
+  background: #b03a2e; color: #f4ecdf; -webkit-text-stroke: .02em currentColor;
+  --seal-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 6 0 0 0 -1.7'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  -webkit-mask-image: var(--seal-grain); mask-image: var(--seal-grain);
+}
+.seal > span { display: block; }
 /* The index handle is written vertically: "index" and its motto stand side by side as two columns, "index" leading. */
 .edge-paired { writing-mode: vertical-rl; flex-direction: column; align-items: flex-start; }
 .edge-paired .paired-text { font-size: .85rem; letter-spacing: .3em; color: var(--site-fg); }
@@ -70,7 +78,7 @@ h1 .paired-motto { margin: -.05em -.55em 0 0; font-size: .38em; letter-spacing: 
 .page-main.wide { max-width: 880px; width: min(100% - 3rem, 880px); }
 .page-intro { margin-bottom: 3.5rem; }
 .eyebrow { font-family: var(--font-mono); font-size: .75rem; color: var(--terminal-accent-1); margin-bottom: 1.5rem; }
-h1 { font-size: clamp(2.35rem, 4.3vw, 3.9rem); font-weight: 500; line-height: 1.15; letter-spacing: -.045em; margin: 0 0 1.4rem; text-wrap: balance; }
+h1 { font-size: clamp(1.9rem, 3.2vw, 2.8rem); font-weight: 500; line-height: 1.15; letter-spacing: -.045em; margin: 0 0 1.4rem; text-wrap: balance; }
 .page-description { color: var(--site-muted); line-height: 1.6; font-size: 1.1rem; max-width: 55ch; }
 /* A group heading is a rule with the name and count set into it: ── Publications · 2 ────── */
 .content-group { display: flex; align-items: center; gap: .6rem; margin: 3.5rem 0 1.6rem; font-family: var(--font-mono); font-size: .9rem; font-weight: 400; letter-spacing: .02em; color: var(--terminal-accent-1); }
