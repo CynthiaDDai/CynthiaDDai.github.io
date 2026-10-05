@@ -10,7 +10,7 @@ personal=(
   docs/audits terminal_personal_website_master_spec.md scripts/export-template.sh
 )
 # Words that only appear in personal content; the export stops if any of them would reach the template.
-markers='waterloo|d9dai|meow-thematics|satriano|cynthiaddai\.github\.io'
+markers='waterloo|d9dai|meow-thematics|satriano|cynthiaddai\.github\.io|math-146|衔蝉|灯火阑珊|衔烛龙|瞑为夜|横岭侧峰'
 
 exclude=()
 for path in "${personal[@]}"; do exclude+=(":(exclude)$path"); done
