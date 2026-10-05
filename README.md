@@ -27,7 +27,7 @@ On NixOS, run `nix-shell` first.
 | Guide | For |
 | --- | --- |
 | [Getting started](docs/getting-started.md) | From a fresh copy to a published site, step by step |
-| [Writing content](docs/writing.md) | Pages, folders, naming rules, frontmatter, file cards, drafts, RSS |
+| [Writing content](docs/writing.md) | Pages, folders, naming rules, frontmatter, file cards and file pages, drafts, RSS |
 | [Configuration](docs/configuration.md) | `site.json`, `themes.json`, `fastfetch` style, public address |
 | [Themes](docs/themes.md) | Adding Oh My Posh themes, website colors, mobile prompts |
 | [Commands and keys](docs/commands.md) | What visitors can type and press |

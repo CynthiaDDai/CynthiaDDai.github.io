@@ -10,7 +10,8 @@ import { join } from 'node:path';
 const el = (tagName, properties, children) => ({ type: 'element', tagName, properties, children });
 const text = value => ({ type: 'text', value });
 
-function publicFile(href) {
+// The size of the file in public/ that a site path names, or undefined if there is none.
+export function publicFile(href) {
   if (typeof href !== 'string' || !href.startsWith('/') || href.startsWith('//')) return;
   try {
     const stat = statSync(join(process.cwd(), 'public', decodeURI(href.split(/[?#]/)[0])));
@@ -22,11 +23,18 @@ const textOf = node => node.type === 'text' ? node.value : (node.children ?? [])
 // A card is named after its title: [Lecture Notes] is …/lecture-notes.
 export const slug = value => value.normalize('NFKD').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-function card(link, size, description) {
-  const name = decodeURI(link.properties.href).split('/').at(-1);
+// What a card says about a file in public/: its name, its kind (PDF, SVG, …) and its size. Undefined if there is no such file.
+export function fileFacts(href) {
+  const size = publicFile(href);
+  if (size === undefined) return;
+  const name = decodeURI(href.split(/[?#]/)[0]).split('/').at(-1);
   const extension = name.includes('.') ? name.split('.').at(-1).toLowerCase() : '';
   const kind = extension.toUpperCase() || 'FILE';
-  const kb = size < 1024 * 1024 ? `${Math.max(1, Math.round(size / 1024))} KB` : `${(size / 1024 / 1024).toFixed(1)} MB`;
+  return { name, kind, size: size < 1024 * 1024 ? `${Math.max(1, Math.round(size / 1024))} KB` : `${(size / 1024 / 1024).toFixed(1)} MB` };
+}
+
+function card(link, description) {
+  const { name, kind, size } = fileFacts(link.properties.href);
   const cardName = slug(textOf(link)) || slug(name.replace(/\.[^.]*$/, ''));
   // Painted by the site script as the theme's transient prompt; the text is the no-JavaScript fallback.
   // A file is "behind": there is something to pull. A "wip" link title marks it as in progress.
@@ -35,7 +43,7 @@ function card(link, size, description) {
     el('a', { className: ['card-link'], href: link.properties.href }, link.children),
     ...(description.length ? [el('p', { className: ['card-description'] }, description)] : []),
     el('p', { className: ['card-output'] }, [
-      el('span', {}, [text(`${kind} · ${kb}`)]),
+      el('span', {}, [text(`${kind} · ${size}`)]),
       el('a', { className: ['card-action'], href: link.properties.href, download: true, ariaLabel: `Download ${name}` }, [text('pull')]),
     ]),
   ]);
@@ -57,7 +65,7 @@ export default function fileCards() {
         if (status != null && status !== 'wip') throw new Error(`${file.path}: a file card's link title is its status, and can only be "wip" (in progress): ${link.properties.href} "${status}"`);
         const rest = breakAt < 0 ? [] : [text(parts[breakAt].value.slice(parts[breakAt].value.indexOf('\n') + 1)), ...parts.slice(breakAt + 1)];
         const description = rest.filter(part => part.type !== 'text' || part.value.trim());
-        node.children[index] = card(link, size, description);
+        node.children[index] = card(link, description);
       });
     }
     visit(tree);

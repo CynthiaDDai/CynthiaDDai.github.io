@@ -7,8 +7,6 @@ In Winter 2023, I was one of the teaching assistant for MATH 146, linear algebra
 
 Here contains some notes and slides I prepared for the tutorials. In particular, for the hangouts, exercises are included.
 
-> In the slides, you will see my deadname, please just ignore!
-
 [Why Linear Algebra](/assets/slides/whylinalg.pdf)
 In this slide, I tried to motivate the notion of linear transformation by trying to find a general formula for Fibonacci sequence.
 

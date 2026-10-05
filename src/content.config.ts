@@ -24,6 +24,10 @@ const common = z.looseObject({
   repo: z.url().optional(),
   demo: z.url().optional(),
   featured: z.boolean().default(false),
+  // A file in public/ that this page stands for, as a site path: its listing card opens the file, and the page shows a file card.
+  file: z.string().regex(/^\/(?!\/)/, 'file must be a site path under public/, starting with /').optional(),
+  // Marks the work as in progress; themes draw it as a working change.
+  wip: z.boolean().default(false),
 });
 
 export const collections = {

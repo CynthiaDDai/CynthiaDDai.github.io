@@ -77,10 +77,10 @@ Cards offer their state as git fields, so the theme decides how to show it:
 | Item | `.Segments.Contains "Git"` | `.Segments.Git.Working.Changed` | `.Segments.Git.Behind` |
 | --- | --- | --- | --- |
 | Ordinary page or folder | false | | |
-| Work in the first group of a [grouped listing](writing.md#grouped-listings) | true | false | false |
-| Work in a later group | true | true | false |
-| File card | true | false | true |
-| File card marked `"wip"` | true | true | true |
+| Work in a [grouped listing](writing.md#grouped-listings) | true | false | false |
+| Page marked `wip: true` | true | true | false |
+| File card, or a [file page](writing.md#file-pages) in a listing | true | false | true |
+| File card marked `"wip"`, or a file page marked `wip: true` | true | true | true |
 
 Storm shows these as `✓`, `~` and `⇣`.
 

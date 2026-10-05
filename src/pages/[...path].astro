@@ -3,6 +3,7 @@ import { getEntry, render } from 'astro:content';
 import ArticleLayout from '../layouts/ArticleLayout.astro';
 import PageLayout from '../layouts/PageLayout.astro';
 import ContentList from '../components/content/ContentList.astro';
+import FileCard from '../components/content/FileCard.astro';
 import { getContentTree } from '../lib/navigation/site-index';
 import { virtualPath } from '../lib/navigation/filesystem';
 import type { ContentNode } from '../lib/content/tree';
@@ -28,5 +29,6 @@ const parentTitle = tree.nodes.find(parent => parent.path === node.parentPath)?.
   {Content && <div class="prose"><Content /></div>}
   {node.frontmatter.show_children !== false && children.length > 0 && <ContentList entries={children} groups={node.frontmatter.groups} />}
 </PageLayout> : entry && rendered && Content && <ArticleLayout {...entry.data} title={node.title} description={node.description} tags={node.tags} headings={rendered.headings} parentTitle={parentTitle}>
+  {node.frontmatter.file && <FileCard href={node.frontmatter.file} name={node.slug} title={node.title} wip={node.frontmatter.wip} />}
   <Content />
 </ArticleLayout>}

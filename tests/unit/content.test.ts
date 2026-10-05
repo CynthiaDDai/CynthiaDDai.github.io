@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildContentTree, ignoredContentName, invalidContentPaths, type ContentSource } from '../../src/lib/content/tree';
+import { buildContentTree, ignoredContentName, invalidContentPaths, invalidFiles, type ContentSource } from '../../src/lib/content/tree';
 import { listChildren, pathFromUrl, resolvePath } from '../../src/lib/navigation/filesystem';
 import { searchEntries } from '../../src/lib/search';
 import { autocomplete } from '../../src/lib/terminal/autocomplete';
@@ -70,6 +70,19 @@ describe('filesystem-native content tree', () => {
       { id: 'notes/free.md', data: {} },
     ]);
     expect(tree.nodes.map(node => node.path)).toContain('/research/a');
+  });
+
+  it('requires a page file to exist in public/, and keeps files off folders', () => {
+    const tree = buildContentTree([
+      { id: 'notes/index.md', data: { file: '/notes/index.pdf' } },
+      { id: 'notes/stacks.md', data: { file: '/notes/stacks.pdf' } },
+      { id: 'notes/missing.md', data: { file: '/notes/missing.pdf' } },
+      { id: 'notes/prose.md', data: {} },
+    ]);
+    expect(invalidFiles(tree.nodes, href => href !== '/notes/missing.pdf')).toEqual([
+      '  src/content/notes/index.md: a folder\'s index.md cannot have a file',
+      '  src/content/notes/missing.md: file /notes/missing.pdf is not in public/',
+    ]);
   });
 
   it('refuses a draft root index, which would exclude the whole site', () => {

@@ -1,6 +1,6 @@
 ---
 title: About
-description: Who I am, what I do and contact.
+description: Who I am and what I do.
 order: 10
 motto: 雪泥鸿爪
 ---
@@ -13,12 +13,4 @@ Outside of School, I enjoy cats, video games, music and horror films.
 
 ## What I do?
 
-Here is a short list of things I'm trying to think at the back of my head:
-
-- Heights on toric stacks
-- Toric vector bundles
-- Hilbert schemes
-
-## Contact?
-
-Email and address are on the [contact page](/contact).
+At the moment, my interests lies at the intersection of arithmetic, toric and stacky geometry.

@@ -178,12 +178,13 @@ test('a placeholder post renders its asset, math, contents, footnote and absolut
 
 test('a grouped directory lists works under status headings with their own links', async ({ page }) => {
   await page.goto('/papers');
-  await expect(page.locator('.content-group')).toHaveText(['Publications· 1', 'Preprints· 1']);
+  await expect(page.locator('.content-group')).toHaveText(['Publications· 2', 'Preprints· 1']);
   const work = page.locator('.prompt-card').filter({ hasText: 'Placeholder: a published work' });
-  // Each work is the theme's transient prompt for …/name, with its group's git state (storm: ✓ clean, ~ working changes).
+  // Each work is the theme's transient prompt for …/name, with its git state (storm: ✓ clean, ~ working changes for wip: true).
   await expect(work.locator('.card-prompt')).toContainText('…/placeholder-published');
   await expect(work.locator('.card-title-text')).toHaveText('placeholder-published');
   await expect(work.locator('.card-prompt')).toContainText('✓');
+  await expect(work.locator('.card-prompt')).not.toContainText('~');
   await expect(page.locator('.prompt-card').filter({ hasText: 'Placeholder: a preprint' }).locator('.card-prompt')).toContainText('~');
   await expect(work.locator('.card-name')).toHaveText('Placeholder: a published work');
   await expect(work.locator('.card-output')).toContainText('2025-06-01 · Mira Placeholder, A. Coauthor · Journal of Placeholders');
@@ -205,6 +206,28 @@ test('a grouped directory lists works under status headings with their own links
   await expect(topic.locator('.card-prompt')).toContainText('…/placeholder-topic/');
   await expect(topic.locator('.card-prompt')).not.toContainText('✓');
   await expect(topic.locator('.card-name')).toHaveCount(0);
+});
+
+test('a page with a file is listed as that file, and shows it as a card', async ({ page }) => {
+  await page.goto('/papers');
+  const slides = page.locator('.prompt-card').filter({ hasText: 'Placeholder: slides' });
+  // It is grouped like any work; its card opens the file, offers a download, and has something to pull (storm: ✓ ⇣).
+  await expect(slides.locator('.card-prompt')).toContainText('…/placeholder-slides');
+  await expect(slides.locator('.card-prompt')).toContainText('✓ ⇣');
+  await expect(slides.getByRole('link', { name: 'Placeholder: slides' })).toHaveAttribute('href', '/navigation-model.svg');
+  await expect(slides.locator('.card-output')).toContainText('SVG · 1 KB');
+  await expect(slides.locator('.card-output')).toContainText('2025-09-01');
+  await expect(slides.getByRole('link', { name: 'Download navigation-model.svg' })).toHaveAttribute('download', '');
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  // Its own page, reached by search or the terminal, shows the file as a card above the notes.
+  await page.goto('/papers/placeholder-slides');
+  const card = page.locator('.prose .file-card');
+  await expect(card).toHaveCount(1);
+  await expect(card.getByRole('link', { name: 'Placeholder: slides' })).toHaveAttribute('href', '/navigation-model.svg');
+  await expect(card.locator('.card-prompt')).toContainText('…/placeholder-slides');
+  await expect(card.locator('.card-output')).toContainText('SVG · 1 KB');
+  await expect(page.locator('.prose')).toContainText('Notes about the file go here');
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
 
 test('a standalone link to a public file becomes a card, with the following lines as its description', async ({ page }) => {

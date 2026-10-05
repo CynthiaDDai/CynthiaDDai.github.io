@@ -17,6 +17,8 @@ export interface ContentMetadata {
   links?: Record<string, string>;
   example?: boolean;
   motto?: string;
+  file?: string;
+  wip?: boolean;
   [key: string]: unknown;
 }
 
@@ -74,6 +76,16 @@ export const ignoredContentName = (name: string) => name.startsWith('.') || name
 // Every folder and document name must be lowercase ASCII words joined by hyphens.
 export function invalidContentPaths(files: string[]): string[] {
   return files.filter(file => !file.replace(/\.mdx?$/, '').split('/').every(part => contentName.test(part)));
+}
+
+// A page's `file` must name a file in public/; a folder's index cannot stand for a file.
+export function invalidFiles(nodes: ContentNode[], exists: (href: string) => boolean): string[] {
+  return nodes.flatMap(node => {
+    const file = node.frontmatter.file;
+    if (!file) return [];
+    if (node.kind === 'directory') return [`  ${node.index.source === 'explicit' ? node.index.document.sourcePath : node.path}: a folder's index.md cannot have a file`];
+    return exists(file) ? [] : [`  ${node.sourcePath}: file ${file} is not in public/`];
+  });
 }
 
 export function buildContentTree(sources: ContentSource[]): ContentTree {

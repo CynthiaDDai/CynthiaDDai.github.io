@@ -79,11 +79,26 @@ tags: [mathematics, teaching]
 | `links` | map | Label → URL buttons on the page and in its listing (see [Papers and other works](#papers-and-other-works)) |
 | `repo` | URL | A "Source code ↗" link |
 | `demo` | URL | A "Visit project ↗" link |
+| `file` | site path | A file in `public/` that the page stands for; its listing card opens the file (see [File pages](#file-pages)) |
+| `wip` | true/false | `true` marks the work as in progress; themes can draw it as a working change |
 | `motto` | text | Decorative words beside the title, set like a seal in two vertical columns, such as `温故知新`; hidden from screen readers and search (see [Mottos](configuration.md#mottos)) |
 | `show_children` | true/false | Section pages only: `false` hides the list of children |
 | `groups` | map | Section pages only: splits the listing into headed groups |
 
 The URL always comes from the file's location. A `slug` field does not change it.
+
+### New pages
+
+`scripts/new-page` writes a new page with every field it can use, so there is no table to look up:
+
+```sh
+scripts/new-page src/content/notes/topology.md      # a page
+scripts/new-page src/content/talks/index.md         # a section page, with the fields for a folder
+```
+
+It sets `title` from the file name. Every other field follows as a comment, with what it does; delete the leading `#` to use one, and leave the rest. They are comments because an empty field breaks the build, and an empty `date` would quietly become 1970. If the folder has groups, the `status` line lists them.
+
+Like `touch`, it needs the folder to exist, and it never overwrites a page. It is POSIX `sh`, so it runs from any shell, on Linux and macOS. Inside the development shell (`nix-shell`) it is also on the path as `new-page`. For a page that stands for a PDF, use [`cp-pdf`](#file-pages) instead.
 
 Pages with at least two `##` or `###` headings get an "on this page" table of contents, drawn as a tree of sections (`##`) and subsections (`###`). On wide screens it stays beside the article while the reader scrolls and marks the section being read; on narrower screens it sits under the title and lists only the sections.
 
@@ -152,7 +167,7 @@ status: Preprint
 
 Every child of a grouped section needs one of the listed statuses, or the build stops and names the file. Empty groups are omitted. Changing `status: Preprint` to `status: Publication` moves a work to the other group without changing its URL.
 
-List groups from finished to in progress. Themes can mark work outside the first group as unfinished (Storm shows `~` instead of `✓`).
+Each work in a grouped listing is shown as finished (Storm shows `✓`), unless it has `wip: true` (Storm shows `~`). Groups can be kinds of work, such as lecture notes and expositions, as well as stages.
 
 ## Papers and other works
 
@@ -221,6 +236,33 @@ To mark a file as unfinished, give the link the title `"wip"`:
 ```
 
 Any other link title on a card stops the build. A link inside a sentence stays an ordinary link.
+
+## File pages
+
+A file card lives in the prose of one page. To list a file among a section's children instead, next to Markdown pages and in the same [groups](#grouped-listings), give it a page of its own with `file`:
+
+```yaml
+# notes/stacks.md
+---
+title: Algebraic Stacks
+description: Notes from a course in fall 2022.
+status: Lectures
+file: /notes/stacks.pdf
+---
+```
+
+`file` is the file's path on the site: `/notes/stacks.pdf` is `public/notes/stacks.pdf`. If there is no such file, the build stops and names the page.
+
+In the section's listing, the card opens the file, shows its type and size, and has a `pull` button that downloads it. The page itself still exists for search and the terminal: it shows the file as a card, followed by anything written below the frontmatter. `wip: true` marks the file as in progress, like a `"wip"` link title.
+
+`scripts/cp-pdf` writes such a page. It takes paths like `cp`: the file, which must already be in `public/`, then the page, or a folder to name the page after the file. It copies nothing and never overwrites a page:
+
+```sh
+scripts/cp-pdf public/notes/stacks.pdf src/content/notes/          # writes notes/stacks.md
+scripts/cp-pdf public/notes/main.pdf src/content/notes/stacks.md
+```
+
+The page it writes sets `title` and `file`. The other fields a file page can use follow as comments, each with what it does; delete the leading `#` to use one. They are comments because an empty field breaks the build, and an empty `date` would quietly become 1970. If the folder has groups, the `status` line lists them. The script is POSIX `sh`, so it runs from any shell, on Linux and macOS. Inside the development shell (`nix-shell`) it is also on the path as `cp-pdf`.
 
 ## Drafts
 

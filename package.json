@@ -11,7 +11,7 @@
     "build": "astro check && astro build --force && node scripts/check-links.mjs",
     "preview": "astro preview --host 127.0.0.1",
     "test": "vitest run",
-    "test:build": "node --test tests/build/content.test.mjs",
+    "test:build": "node --test tests/build/content.test.mjs tests/build/cp-pdf.test.mjs tests/build/new-page.test.mjs",
     "check:release": "node scripts/check-release.mjs",
     "check:links": "node scripts/check-links.mjs",
     "test:browser": "playwright test",

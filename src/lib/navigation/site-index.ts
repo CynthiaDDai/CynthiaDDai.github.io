@@ -1,7 +1,8 @@
 import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { getCollection } from 'astro:content';
-import { buildContentTree, ignoredContentName, invalidContentPaths, type ContentTree } from '../content/tree';
+import { buildContentTree, ignoredContentName, invalidContentPaths, invalidFiles, type ContentTree } from '../content/tree';
+import { publicFile } from '../../../scripts/rehype-file-cards.mjs';
 import { siteConfigErrors } from '../site-config';
 import { site } from '../../config';
 
@@ -24,6 +25,12 @@ function checkContentNames() {
   }
 }
 
+function checkFiles(tree: ContentTree) {
+  const invalid = invalidFiles(tree.nodes, href => publicFile(href) !== undefined);
+  if (invalid.length) throw new Error(`A page's file must be a site path to a file in public/, such as /notes/stacks.pdf for public/notes/stacks.pdf:\n${invalid.join('\n')}`);
+  return tree;
+}
+
 function checkSiteConfig() {
   const errors = siteConfigErrors(site);
   if (errors.length) throw new Error(`${process.env.SITE_PROFILE || 'src/config/site.json'}:\n${errors.map(error => `  ${error}`).join('\n')}`);
@@ -32,7 +39,7 @@ function checkSiteConfig() {
 let snapshot: Promise<ContentTree> | undefined;
 
 export function getContentTree(): Promise<ContentTree> {
-  const load = async () => { checkSiteConfig(); checkContentNames(); return buildContentTree(await getCollection('content')); };
+  const load = async () => { checkSiteConfig(); checkContentNames(); return checkFiles(buildContentTree(await getCollection('content'))); };
   if (import.meta.env.DEV) return load();
   return snapshot ??= load();
 }

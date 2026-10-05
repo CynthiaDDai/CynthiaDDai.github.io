@@ -1,0 +1,13 @@
+---
+// The file a page stands for, drawn like a file card in prose (see scripts/rehype-file-cards.mjs).
+import { fileFacts } from '../../../scripts/rehype-file-cards.mjs';
+interface Props { href: string; name: string; title: string; wip?: boolean; }
+const { href, name, title, wip } = Astro.props;
+const facts = fileFacts(href);
+if (!facts) throw new Error(`File card for a missing file: ${href}`);
+---
+<div class="prompt-card file-card" data-card data-card-name={name} data-card-git={wip ? 'working behind' : 'behind'}>
+  <div class="card-prompt" aria-hidden="true">…/{name}</div>
+  <a class="card-link" href={href}>{title}</a>
+  <p class="card-output"><span>{facts.kind} · {facts.size}</span><a class="card-action" href={href} download aria-label={`Download ${facts.name}`}>pull</a></p>
+</div>

@@ -1,0 +1,79 @@
+#!/bin/sh
+# Usage: new-page PAGE
+#
+# Writes PAGE, a new .md under src/content/, with a title and every other field it can use as a comment.
+# The fields are comments because an empty field breaks the build; delete the leading # to use one.
+# PAGE named index.md is a section page, with the fields for a folder. An existing page is never overwritten.
+#
+#   new-page src/content/notes/topology.md
+#   new-page src/content/talks/index.md
+set -eu
+die() { echo "new-page: $*" >&2; exit 1; }
+[ $# -eq 1 ] || die "usage: new-page PAGE"
+
+page=$1
+[ -d "$page" ] && die "$page: is a folder; name the page, such as ${page%/}/index.md or ${page%/}/first-post.md"
+case $page in *.md) ;; *) die "$page: must end in .md" ;; esac
+[ -d "$(dirname "$page")" ] || die "$(dirname "$page"): no such folder"
+[ -e "$page" ] && die "$page: already exists"
+
+folder=$(cd "$(dirname "$page")" && pwd -P)/
+case $folder in */src/content/*) ;; *) die "$page: not under src/content/" ;; esac
+
+# One field per line: the commented field, then what it does, aligned. printf pads by bytes, so the motto lines are padded by hand.
+field() { printf '%-30s # %s\n' "# $1" "$2"; }
+
+if [ "$(basename "$page")" = index.md ]; then
+  name=$(basename "$folder")
+  [ "$name" = content ] && name=home
+  {
+    printf -- '---\ntitle: %s\n' "$name"
+    echo "# Optional fields: delete the leading # to use one. Leave a field out rather than empty."
+    field "description: One sentence." "shown under the title, in ls, listings and search"
+    field "order: 10" "position among its siblings; lower comes first"
+    echo "# motto: 温故知新              # decorative words beside the title, set like a seal"
+    field "groups:" "list the children under headings by their status, in this order"
+    echo "#   Lectures: Lecture Notes"
+    echo "#   Expositions: Expositions"
+    field "show_children: false" "hides the list of children"
+    field "draft: true" "withdraws the whole folder"
+    echo "---"
+    echo
+    echo "An introduction, shown above the list of children."
+  } > "$page"
+else
+  title=$(basename "$page" .md)
+  # The statuses of the folder's groups, if its index.md has any: the keys indented under `groups:`.
+  groups=$(cat "$(dirname "$page")"/index.md "$(dirname "$page")"/index.mdx 2>/dev/null | awk '
+    /^---/ { fence++; next }
+    fence != 1 { next }
+    /^groups:[[:space:]]*(#.*)?$/ { listing = 1; next }
+    listing && /^[[:space:]]+[^#[:space:]][^:]*:/ { sub(/^[[:space:]]+/, ""); sub(/:.*/, ""); printf "%s%s", separator, $0; separator = ", "; next }
+    !/^[[:space:]]/ { listing = 0 }')
+  {
+    printf -- '---\ntitle: %s\n' "$title"
+    echo "# Optional fields: delete the leading # to use one. Leave a field out rather than empty."
+    field "description: One sentence." "shown under the title, in listings, search and link previews"
+    field "date: $(date +%Y-%m-%d)" "publication date; dated pages are listed newest first"
+    field "updated: $(date +%Y-%m-%d)" "shown as \"Updated …\" at the end of the page"
+    field "tags: [mathematics]" "shown on the page and in listings; searchable"
+    if [ -n "$groups" ]; then
+      field "status: ${groups%%,*}" "required in this folder: one of $groups"
+    else
+      field "status: Draft" "shown next to the date; sorts the page into its folder's groups, if it has any"
+    fi
+    field "wip: true" "marks the work as in progress"
+    field "authors: A. Author" "byline under the title, and in listings"
+    field "venue: arXiv 2503.01234" "shown next to the date, and in listings"
+    field "links:" "buttons on the page and in its listing; label: URL"
+    echo "#   arXiv: https://arxiv.org/abs/2503.01234"
+    field "repo: https://github.com/x" "a \"Source code ↗\" link"
+    field "demo: https://example.com" "a \"Visit project ↗\" link"
+    echo "# motto: 温故知新              # decorative words beside the title, set like a seal"
+    field "order: 10" "position among its siblings; lower comes first"
+    field "draft: true" "keeps the page off the site"
+    echo "---"
+    echo
+  } > "$page"
+fi
+echo "$page"

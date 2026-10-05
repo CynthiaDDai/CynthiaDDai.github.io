@@ -1,12 +1,14 @@
 ---
 import type { ContentNode } from '../../lib/content/tree';
-import { slug } from '../../../scripts/rehype-file-cards.mjs';
+import { fileFacts, slug } from '../../../scripts/rehype-file-cards.mjs';
 interface Props { entries: ContentNode[]; groups?: Record<string, string>; }
 const { entries, groups } = Astro.props;
-// Groups run from finished to in progress: works in the first are clean, later ones have working changes.
 const sections = groups
-  ? Object.entries(groups).map(([status, heading], index) => ({ heading, git: index === 0 ? '' : 'working', entries: entries.filter(entry => entry.frontmatter.status === status) })).filter(section => section.entries.length)
-  : [{ heading: undefined, git: undefined, entries }];
+  ? Object.entries(groups).map(([status, heading]) => ({ heading, entries: entries.filter(entry => entry.frontmatter.status === status) })).filter(section => section.entries.length)
+  : [{ heading: undefined, entries }];
+// Git state for the theme to draw: a file has something to pull, and work marked wip has working changes.
+// In a grouped listing every other work is clean; elsewhere an ordinary entry has no git state.
+const git = (entry: ContentNode) => [entry.frontmatter.wip && 'working', entry.frontmatter.file && 'behind'].filter(Boolean).join(' ') || (groups ? '' : undefined);
 const Title = groups ? 'h3' : 'h2';
 const external = (url: string) => /^https?:/.test(url);
 ---
@@ -14,20 +16,24 @@ const external = (url: string) => /^https?:/.test(url);
   {section.heading && <h2 class="content-group">{section.heading}<span class="content-group-count" aria-hidden="true">· {section.entries.length}</span></h2>}
   <ol class="content-list">
     {section.entries.map(entry => {
-      const { authors, venue, links } = entry.frontmatter;
+      const { authors, venue, links, file } = entry.frontmatter;
+      // A page that stands for a file opens the file; the build has checked that it exists.
+      const facts = file ? fileFacts(file) : undefined;
       const directory = entry.kind === 'directory';
       const meta = [entry.date?.slice(0, 10), entry.example && 'example', authors, venue, entry.tags.join(' / ')].filter(Boolean);
       // Each entry is a prompt for its path (painted by the site script; the text is the no-JavaScript fallback).
       const name = `${entry.slug}${directory ? '/' : ''}`;
-      return <li class="prompt-card" data-card data-card-name={name} data-card-git={section.git}>
+      return <li class="prompt-card" data-card data-card-name={name} data-card-git={git(entry)}>
         <div class="card-prompt" aria-hidden="true">…/{name}</div>
-        <Title class="card-title"><a class="card-link" href={entry.path}>{entry.title}</a></Title>
+        <Title class="card-title"><a class="card-link" href={file ?? entry.path}>{entry.title}</a></Title>
         {/* The path already names the entry; a title that says more (other words, other scripts) is shown too. */}
         {slug(entry.title) !== entry.slug && <p class="card-name" aria-hidden="true">{entry.title}</p>}
         {entry.description && <p class="card-description">{entry.description}</p>}
-        {(meta.length > 0 || links) && <p class="card-output">
+        {(meta.length > 0 || links || facts) && <p class="card-output">
+          {facts && <span>{facts.kind} · {facts.size}</span>}
           {meta.length > 0 && <span>{meta.join(' · ')}</span>}
           {links && Object.entries(links).map(([label, url]) => <a class="card-action" href={url}>{label}{external(url) && ' ↗'}</a>)}
+          {file && facts && <a class="card-action" href={file} download aria-label={`Download ${facts.name}`}>pull</a>}
         </p>}
       </li>;
     })}

@@ -101,7 +101,7 @@ On most systems, install Playwright's browser once with `npx playwright install 
 
 ### NixOS
 
-`shell.nix` provides Node.js 22, Chromium and Caddy, and points Playwright at that Chromium, since Playwright's own download doesn't run on NixOS:
+`shell.nix` provides Node.js 22, Chromium and Caddy, and points Playwright at that Chromium, since Playwright's own download doesn't run on NixOS. It also puts [`new-page`](writing.md#new-pages) and [`cp-pdf`](writing.md#file-pages) on the path:
 
 ```sh
 nix-shell                                   # then npm ci, npm run dev, …
