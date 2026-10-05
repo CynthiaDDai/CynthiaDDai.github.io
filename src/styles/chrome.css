@@ -12,7 +12,7 @@
 .home-header { box-sizing: border-box; width: 100%; max-width: 1320px; min-height: 100px; margin: 0 auto; padding: 1.5rem 3rem; font-size: .78rem; }
 .home-footer { margin-top: auto; width: 100%; gap: 1rem; }
 .home-footer-dot { margin: 0 .55em; color: var(--terminal-accent-1); }
-.theme-switch { border: 0; display: inline-flex; align-items: center; gap: .75rem; padding: .6rem 0; font-family: var(--font-mono); font-size: .75rem; color: var(--site-muted); }
+.theme-switch { border: 0; display: inline-flex; align-items: center; gap: .75rem; text-align: left; padding: .6rem 0; font-family: var(--font-mono); font-size: .75rem; color: var(--site-muted); }
 .theme-switch:hover, .theme-switch:focus-visible { color: var(--site-fg); }
 .theme-switch .theme-swatch { margin-right: .25rem; transition: transform .15s ease; }
 .theme-switch:hover .theme-swatch, .theme-switch:focus-visible .theme-swatch { transform: scale(1.25); }
@@ -31,7 +31,7 @@
    sized in proportion to it. column-reverse would put the motto on top. */
 .paired { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 0; vertical-align: top; }
 .paired-motto { margin-top: -.15em; font-family: var(--font-cjk), serif; font-weight: 400; font-size: .82em; letter-spacing: .12em; line-height: 1.1; color: var(--site-muted); white-space: nowrap; }
-.home-footer .paired-motto { margin-top: .1em; font-size: 1em; letter-spacing: .15em; }
+.home-footer .paired-motto, .theme-switch .paired-motto { margin-top: .1em; font-size: 1em; letter-spacing: .15em; }
 h1 .paired-motto { margin-top: -.05em; font-size: .38em; letter-spacing: .55em; color: var(--terminal-accent-1); }
 /* The index handle is written vertically: "index" and its motto stand side by side as two columns, "index" leading. */
 .edge-paired { writing-mode: vertical-rl; flex-direction: column; align-items: flex-start; }

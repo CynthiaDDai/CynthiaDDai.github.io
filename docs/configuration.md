@@ -88,6 +88,22 @@ A motto is a few decorative words paired with an English label, such as four Chi
 | Under a page's title | `motto` in the page's frontmatter, or in a folder's `index.md` (see [Writing](writing.md#frontmatter)) |
 | Under the 404 title | `notFound.motto` |
 
+### Theme switch
+
+The switch in the top right corner shows the current theme's name. `themeSwitch` can give each theme (by its folder ID) a label of its own, with an optional motto, and replace the tooltip:
+
+```json
+"themeSwitch": {
+  "title": "天东有若木，下置衔烛龙。—— 李贺《苦昼短》",
+  "labels": {
+    "storm": { "text": "dusk", "motto": "瞑为夜" },
+    "pine_ink": { "text": "dawn", "motto": "视为昼" }
+  }
+}
+```
+
+Themes without a label keep their name. Screen readers always hear "Switch color theme".
+
 ### Content
 
 | Field | Used for |

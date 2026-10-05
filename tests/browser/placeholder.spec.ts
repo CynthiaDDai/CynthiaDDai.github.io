@@ -61,6 +61,20 @@ test('the theme switch and wordmark sit in the same place on every page', async 
   }
 });
 
+test('the theme switch shows each theme’s label from site.json, or its name', async ({ page }) => {
+  await page.goto('/blog');
+  const toggle = page.getByRole('button', { name: 'Switch color theme' });
+  const label = toggle.locator('[data-theme-label]:visible');
+  await expect(toggle).toHaveAttribute('title', 'Night and day');
+  await expect(label).toHaveText('dusk瞑为夜');
+  await toggle.click();
+  await expect(label).toHaveText('dawn');
+  await page.reload();
+  await expect(label).toHaveText('dawn');
+  await toggle.click();
+  await expect(label).toHaveText('Paper');
+});
+
 test('decorative mottos stay out of the accessible text, and every content page shares one footer', async ({ page }) => {
   await page.goto('/blog');
   const motto = page.locator('h1 .paired-motto');
