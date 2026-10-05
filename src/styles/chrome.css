@@ -32,7 +32,10 @@
 .paired { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 0; vertical-align: top; }
 .paired-motto { margin-top: -.15em; font-family: var(--font-cjk), serif; font-weight: 400; font-size: .82em; letter-spacing: .12em; line-height: 1.1; color: var(--site-muted); white-space: nowrap; }
 .home-footer .paired-motto, .theme-switch .paired-motto { margin-top: .1em; font-size: 1em; letter-spacing: .15em; }
-h1 .paired-motto { margin-top: -.05em; font-size: .38em; letter-spacing: .55em; color: var(--terminal-accent-1); }
+/* Under a page title the motto is set flush right, like a seal at the end of a line; the negative margin
+   cancels the tracking after the last character so it ends exactly under the title. */
+h1 .paired { align-items: flex-end; }
+h1 .paired-motto { margin: -.05em -.55em 0 0; font-size: .38em; letter-spacing: .55em; color: var(--terminal-accent-1); }
 /* The index handle is written vertically: "index" and its motto stand side by side as two columns, "index" leading. */
 .edge-paired { writing-mode: vertical-rl; flex-direction: column; align-items: flex-start; }
 .edge-paired .paired-text { font-size: .85rem; letter-spacing: .3em; color: var(--site-fg); }
@@ -54,7 +57,8 @@ h1 .paired-motto { margin-top: -.05em; font-size: .38em; letter-spacing: .55em; 
 .nav-arrow { margin-left: auto; color: var(--terminal-accent-1); }
 @media (min-width: 701px) and (pointer: fine) {
   .edge-menu > nav { visibility: hidden; opacity: 0; transform: translateX(15px); transition: opacity .18s ease, transform .18s ease, visibility .18s; }
-  .edge-menu:hover > nav, .edge-menu:focus-within > nav, .edge-menu.is-expanded > nav { visibility: visible; opacity: 1; transform: none; }
+  /* Without the site script, plain hover opens the menu; with it, .is-open adds a short grace period before closing. */
+  html:not([data-site-ready]) .edge-menu:hover > nav, .edge-menu.is-open > nav, .edge-menu:focus-within > nav, .edge-menu.is-expanded > nav { visibility: visible; opacity: 1; transform: none; }
 }
 .top-nav { max-width: 1320px; margin: auto; display: flex; align-items: center; min-height: 100px; padding: 1.5rem 3rem; gap: 2rem; font-family: var(--font-mono); font-size: .78rem; }
 .site-wordmark { flex: 1; min-width: 0; text-decoration: none; font-size: .9rem; }
@@ -95,7 +99,8 @@ h1 { font-size: clamp(2.35rem, 4.3vw, 3.9rem); font-weight: 500; line-height: 1.
 .content-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.6rem; }
 .page-footer { width: min(100% - 3rem, 1100px); margin: 0 auto; padding: 2rem 0; border-top: 1px solid var(--chrome-border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; font-family: var(--font-mono); font-size: .7rem; color: var(--site-muted); }
 .page-footer a { text-decoration: none; }
-.page-footer-line[lang] { font-size: .85rem; letter-spacing: .1em; }
+.page-footer-line[lang] { font-size: 1rem; letter-spacing: .12em; }
+.page-footer-line::before { content: '❦'; margin-right: .7em; color: var(--terminal-accent-1); opacity: .55; }
 .noscript-note { position: fixed; bottom: 5rem; left: 1.5rem; right: 1.5rem; text-align: center; font-size: .85rem; color: var(--site-muted); }
 /* Keep the text clear of the index handle on narrow desktop windows. */
 @media (min-width: 701px) and (max-width: 1000px) and (pointer: fine) {
