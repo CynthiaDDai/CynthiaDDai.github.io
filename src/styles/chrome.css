@@ -33,15 +33,24 @@
 .paired-motto { margin-top: -.15em; font-family: var(--font-cjk), serif; font-weight: 400; font-size: .82em; letter-spacing: .12em; line-height: 1.1; color: var(--site-muted); white-space: nowrap; }
 .home-footer .paired-motto, .theme-switch .paired-motto { margin-top: .1em; font-size: 1em; letter-spacing: .15em; }
 /* A page's motto follows its title like a name seal after a signature (Seal.astro): a carved seal in two vertical columns,
-   the first on the right, sunk below the title's baseline. Like a real seal it keeps its own cinnabar and paper colors in
-   every theme, and a noise mask wears the ink away in places, so the characters stay clean while the seal looks pressed. */
+   the first on the right, sunk below the title's baseline. Its colors are its own, not the theme's: cinnabar on light
+   pages, and a warmer, lighter vermilion with fewer worn spots on dark ones, where cinnabar turns muddy against blue.
+   A noise mask wears the ink (::before) away in places; the characters sit above it, unworn. */
 .sealed { display: flex; align-items: flex-end; gap: .35em; }
 .seal {
-  flex: none; margin-bottom: -.3em; padding: .14em .12em .1em; border-radius: .1em; writing-mode: vertical-rl;
+  flex: none; position: relative; z-index: 0; margin-bottom: -.3em; padding: .14em .12em .1em; writing-mode: vertical-rl;
   font: 400 .36em/1.1 var(--font-cjk), serif; letter-spacing: -.04em;
-  background: #b03a2e; color: #f4ecdf; -webkit-text-stroke: .02em currentColor;
+  color: var(--seal-paper); -webkit-text-stroke: .02em currentColor;
+  --seal-ink: #b03a2e; --seal-paper: #f4ecdf;
   --seal-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 6 0 0 0 -1.7'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.seal::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; border-radius: .1em; background: var(--seal-ink);
   -webkit-mask-image: var(--seal-grain); mask-image: var(--seal-grain);
+}
+[data-mode='dark'] .seal {
+  --seal-ink: #c2573f; --seal-paper: #efe3d0;
+  --seal-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 14 0 0 0 -4.4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 .seal > span { display: block; }
 /* The index handle is written vertically: "index" and its motto stand side by side as two columns, "index" leading. */
