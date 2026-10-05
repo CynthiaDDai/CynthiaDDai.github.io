@@ -15,7 +15,7 @@ const path = pathFromUrl(Astro.url.pathname);
     <CommandBar path={path} />
     <div class="page-intro">
       {eyebrow && !eyebrow.startsWith('~/') && <p class="eyebrow">{eyebrow}</p>}
-      <h1 class:list={[motto && 'sealed']}><span>{title}</span>{motto && <Seal text={motto} />}</h1>
+      {motto ? <h1 class="sealed"><span>{title}</span><Seal text={motto} /></h1> : <h1>{title}</h1>}
       {description && <p class="page-description">{description}</p>}
     </div>
     <slot />

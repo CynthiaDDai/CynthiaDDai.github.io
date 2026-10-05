@@ -33,7 +33,7 @@ const formatDate = (value: Date) => value.toLocaleDateString(site.dateLocale, { 
     <CommandBar path={path} />
     <article>
       <header class="article-heading">
-        <h1 class:list={[motto && 'sealed']}><span>{title}</span>{motto && <Seal text={motto} />}</h1>
+        {motto ? <h1 class="sealed"><span>{title}</span><Seal text={motto} /></h1> : <h1>{title}</h1>}
         {authors && <p class="article-byline">{authors}</p>}
         {description && <p class="article-deck">{description}</p>}
         <div class="article-meta">{date && <time datetime={date.toISOString()}>{formatDate(date)}</time>}{status && <span class="status">{status}</span>}{venue && <span>{venue}</span>}{example && <span class="example-label">Example content</span>}</div>
