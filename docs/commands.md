@@ -18,6 +18,7 @@ The terminal is a way to move around the website, not a shell. Every command wor
 | `search <words>` | Search titles, descriptions, tags, paths and page text |
 | `fastfetch` | Show the owner, site statistics, recent pages and links (see [Configuration](configuration.md#configjsonc-fastfetch)) |
 | `ssh [friend]` | List friends' websites, or open one in a new tab |
+| `timer` | Open the exam countdown timer at `/timer` (see `src/timer/spec.md`) |
 | `theme [name]` | List the themes, or switch to one |
 | `clear` | Clear the output |
 

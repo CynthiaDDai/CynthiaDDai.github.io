@@ -1,0 +1,88 @@
+---
+// The exam timer: a whole page of its own, without the site's navigation or terminal, in the site's fonts and theme.
+import '../styles/fonts.css';
+import '../styles/tokens.css';
+import 'katex/dist/katex.min.css';
+import './timer.css';
+import { themes, defaultTheme, themeTokens } from '../lib/theme/registry';
+import { site } from '../config';
+import { defaultSettings, formatClock, parseDuration } from './time';
+
+const length = '80'; // the length offered before anything is typed, in minutes
+
+const cssTokens = (tokens: Record<string, string>) => Object.entries(tokens).map(([key, value]) => `${key}:${value}`).join(';');
+const themeCss = themes.map(theme => `[data-theme="${theme.id}"]{${cssTokens(themeTokens(theme))};color-scheme:${theme.mode}}`).join('\n');
+const bootstrap = JSON.stringify(themes.map(theme => ({ id: theme.id, mode: theme.mode }))).replaceAll('<', '\\u003c');
+---
+<!doctype html>
+<html lang={site.lang} data-theme={defaultTheme.id} data-mode={defaultTheme.mode}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{`Timer · ${site.owner}`}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="color-scheme" content="dark light" />
+    <style is:inline set:html={themeCss} />
+    <script is:inline set:html={`try{const themes=${bootstrap};const selected=themes.find(t=>t.id===localStorage.getItem('site-theme'));if(selected){document.documentElement.dataset.theme=selected.id;document.documentElement.dataset.mode=selected.mode;}}catch{}`} />
+  </head>
+  <body>
+    <main class="timer" data-timer data-status="idle">
+      <header class="timer-bar">
+        <h1 class="timer-path"><a href="/" title="Home">~/timer</a></h1>
+        <span class="timer-note" data-note aria-live="polite"></span>
+        <div class="timer-controls">
+          <label class="timer-length" data-length>
+            <input data-duration value={length} size="5" inputmode="numeric" autocomplete="off" spellcheck="false" aria-label="Exam length" title="in minutes: 80, or 1:20 for 1 hour 20 minutes" />
+            <span aria-hidden="true">min</span>
+          </label>
+          <button type="button" data-start>start</button>
+          <button type="button" data-reset>reset</button>
+          <details class="timer-settings" data-settings>
+            <summary>settings</summary>
+            <div class="timer-panel">
+              <form class="timer-field" data-adjust>
+                <label for="timer-adjust">adjust time</label>
+                <input id="timer-adjust" data-adjust-input placeholder="+5" autocomplete="off" spellcheck="false" />
+                <span>min</span>
+                <button type="submit">apply</button>
+              </form>
+              <small>whole minutes: +5 adds five, −2 takes two away</small>
+              <hr />
+              <div class="timer-field">
+                <label for="timer-step">count down every</label>
+                <input id="timer-step" inputmode="numeric" data-setting="step" placeholder={defaultSettings.step} autocomplete="off" spellcheck="false" />
+                <span>s</span>
+              </div>
+              <div class="timer-field">
+                <label for="timer-half">half steps below</label>
+                <input id="timer-half" data-setting="halfBelow" placeholder={defaultSettings.halfBelow} autocomplete="off" spellcheck="false" />
+                <span>s or %</span>
+              </div>
+              <div class="timer-field">
+                <label for="timer-final">every second, in red, below</label>
+                <input id="timer-final" inputmode="numeric" data-setting="finalBelow" placeholder={defaultSettings.finalBelow} autocomplete="off" spellcheck="false" />
+                <span>s</span>
+              </div>
+              <small>whole seconds; the step is at least 1. 10% means a tenth of the exam, and 0 turns half steps or red seconds off</small>
+              <hr />
+              <div class="timer-field">
+                <label for="timer-theme">theme</label>
+                <select id="timer-theme" data-theme-select>
+                  {themes.map(theme => <option value={theme.id}>{theme.id}</option>)}
+                </select>
+              </div>
+            </div>
+          </details>
+        </div>
+      </header>
+      <div class="timer-space" aria-hidden="true"></div>
+      <div class="timer-clock" data-clock role="timer" aria-label="Time left">{formatClock(parseDuration(length)!)}</div>
+      <section class="timer-board" data-board aria-label="Announcements"></section>
+      <div class="timer-space" aria-hidden="true"></div>
+    </main>
+    <script>
+      import './timer';
+    </script>
+  </body>
+</html>

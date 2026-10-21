@@ -1,0 +1,66 @@
+/* The timer page: a quiet top bar, then the countdown and the announcements, centred together. The clock starts in
+   the middle; as announcements grow it is pushed up, until the spacer above it is at its least. */
+
+.timer { height: 100svh; display: flex; flex-direction: column; overflow: hidden; }
+.timer-space { flex: 1 1 0; min-height: 3vh; }
+.timer-bar + .timer-space { min-height: 9vh; }
+
+.timer-bar { flex: none; display: flex; align-items: center; gap: 1.5rem; padding: .9rem 2rem; font-family: var(--font-mono); font-size: .78rem; color: var(--site-muted); }
+.timer-path { margin: 0; font-size: inherit; font-weight: inherit; }
+.timer-path a { text-decoration: none; }
+.timer-path a:hover { color: var(--site-fg); }
+.timer-note { flex: 1; color: var(--terminal-yellow); }
+.timer-controls { display: flex; align-items: center; gap: .4rem; }
+.timer-controls button, .timer-settings summary { border: 0; padding: .35rem .5rem; color: var(--site-muted); font-family: var(--font-mono); font-size: inherit; }
+.timer-controls button:hover, .timer-settings summary:hover, .timer-settings[open] summary { color: var(--site-fg); }
+.timer-controls [hidden] { display: none; }
+.timer-length input { width: 6ch; text-align: right; }
+.timer-length { display: inline-flex; align-items: center; gap: .4rem; margin-right: .3rem; }
+
+.timer input, .timer select { background: transparent; color: var(--site-fg); border: 1px solid var(--chrome-border); padding: .25rem .45rem; font-family: var(--font-mono); font-size: inherit; }
+.timer select option { background: var(--site-bg); }
+.timer input[aria-invalid] { border-color: var(--terminal-error); }
+
+.timer-settings { position: relative; }
+.timer-settings summary { list-style: none; cursor: pointer; }
+.timer-settings summary::-webkit-details-marker { display: none; }
+.timer-panel { position: absolute; right: 0; top: calc(100% + .4rem); z-index: 10; width: 24rem; display: grid; gap: .45rem; padding: 1.1rem; background: var(--site-bg); border: 1px solid var(--chrome-border); color: var(--site-fg); }
+.timer-field { display: flex; align-items: center; gap: .5rem; }
+.timer-field label { flex: 1; color: var(--site-muted); }
+.timer-field input { width: 6ch; text-align: right; }
+.timer-field span { min-width: 4.5ch; color: var(--site-muted); }
+.timer-panel small { color: var(--site-muted); font-size: .68rem; line-height: 1.5; }
+.timer-panel hr { width: 100%; border: 0; border-top: 1px solid var(--chrome-border); margin: .5rem 0; }
+.timer-panel button { border: 1px solid var(--chrome-border); }
+
+/* Large on its own; a band at the top once there are announcements. */
+.timer-clock { flex: none; text-align: center; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 500; line-height: 1; letter-spacing: -.02em; font-size: min(36vh, 23vw); padding-bottom: 4vh; color: var(--site-fg); }
+.timer[data-announcements='full'] .timer-clock { font-size: min(22vh, 14vw); padding-bottom: 3vh; }
+.timer[data-phase='final'] .timer-clock { color: var(--terminal-error); }
+.timer[data-status='paused'] .timer-clock { color: var(--site-muted); }
+
+/* The font size is set by the script: as large as fits the room the clock and spacers leave. */
+.timer-board { flex: 0 1 auto; min-height: 0; overflow: hidden; padding: 0 5vw 3vh; font-family: var(--font-prose); line-height: 1.35; color: var(--prose-fg); cursor: text; overflow-wrap: break-word; }
+.timer[data-announcements='empty'] .timer-board { display: flex; justify-content: center; }
+.timer-block { border-radius: 3px; }
+.timer-block:hover { box-shadow: 0 0 0 .15em color-mix(in srgb, var(--chrome-border) 60%, transparent); }
+.timer-block > :first-child { margin-top: 0; }
+.timer-block > :last-child { margin-bottom: 0; }
+.timer-block + .timer-block, .timer-editor + .timer-block, .timer-block + .timer-editor { margin-top: .45em; }
+.timer-board p { margin: 0; }
+.timer-board h1, .timer-board h2, .timer-board h3, .timer-board h4 { font-family: var(--font-ui); font-weight: 600; line-height: 1.2; margin: 0; }
+.timer-board h1 { font-size: 1.35em; }
+.timer-board h2 { font-size: 1.2em; }
+.timer-board h3, .timer-board h4 { font-size: 1.05em; }
+.timer-board ul, .timer-board ol { margin: 0; padding-left: 1.25em; }
+.timer-board strong { color: var(--site-fg); }
+.timer-board a { color: var(--prose-link); }
+.timer-board code { font-family: var(--font-mono); font-size: .85em; background: var(--prose-code-bg); padding: .05em .25em; border-radius: 3px; }
+.timer-board hr { border: 0; border-top: 1px solid var(--chrome-border); margin: .3em 0; }
+.timer-board blockquote { margin: 0; padding-left: .8em; border-left: .12em solid var(--chrome-accent); color: var(--prose-muted); }
+.timer-board .katex-display { margin: .2em 0; overflow: hidden; }
+.timer-hint { margin: 0; font-family: var(--font-mono); font-size: max(.3em, .8rem); color: var(--site-muted); }
+
+/* The block being edited, as source, at the size it is shown. */
+.timer-editor { display: block; width: 100%; resize: none; overflow: hidden; margin: 0; padding: .1em .25em; border: 1px solid var(--chrome-accent); border-radius: 3px; background: color-mix(in srgb, var(--site-bg) 85%, var(--site-fg)); color: var(--site-fg); font-family: var(--font-mono); font-size: .9em; line-height: 1.35; }
+.timer-editor:focus-visible { outline: none; }

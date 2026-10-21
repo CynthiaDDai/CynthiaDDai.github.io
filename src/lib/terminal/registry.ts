@@ -36,6 +36,10 @@ function navigate(args: string[], ctx: CommandContext): CommandResult {
   return { kind: 'navigation', path: entry.path };
 }
 
+// Pages outside the content tree that commands may open.
+export const timerPath = '/timer';
+export const standalonePaths = [timerPath];
+
 export const commands: CommandDefinition[] = [
   { name: 'help', usage: 'help', description: 'Show the way around.', touchShortcut: true, execute: () => ({ kind: 'rich', rows: commands.map(command => ({ label: command.usage, value: command.description })) }) },
   { name: 'pwd', usage: 'pwd', description: 'Print the current path.', execute: (_, ctx) => text(virtualPath(ctx.cwd)) },
@@ -75,6 +79,7 @@ export const commands: CommandDefinition[] = [
       return { kind: 'external', url: url.href, name: friend.name };
     } catch { return error('This friend link needs a valid website address.'); }
   } },
+  { name: 'timer', usage: 'timer', description: 'Open the exam countdown timer.', execute: () => ({ kind: 'navigation', path: timerPath }) },
   { name: 'theme', usage: 'theme [name]', description: 'List themes or change appearance.', execute: (args, ctx) => {
     if (args.length > 1) return error('Usage: theme [name]');
     if (!args.length) return { kind: 'rich', rows: ctx.theme.available.map(theme => ({ label: theme.id, value: `${theme.name}${theme.id === ctx.theme.current.id ? ' · current' : ''}` })) };

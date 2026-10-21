@@ -25,6 +25,7 @@
     "@shikijs/core": "^4.5.0",
     "astro": "^7.3.5",
     "katex": "^0.16.22",
+    "marked": "^18.1.1",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
     "subset-font": "^2.9.0"

@@ -2,7 +2,7 @@ import { site as config, friends } from '../config';
 import { virtualPath, breadcrumbs, type SiteEntry } from '../lib/navigation/filesystem';
 import { themes, ThemeController } from '../lib/theme/registry';
 import { renderCardPrompt, renderPrompt } from '../lib/theme/prompt-renderer';
-import { executeCommand, type CommandResult } from '../lib/terminal/registry';
+import { executeCommand, standalonePaths, type CommandResult } from '../lib/terminal/registry';
 import { CommandHistory } from '../lib/terminal/history';
 import { autocomplete, commonCompletionPrefix } from '../lib/terminal/autocomplete';
 import { searchEntries } from '../lib/search';
@@ -24,7 +24,7 @@ try {
 } catch { /* Navigation still works without persistent state. */ }
 
 function navigate(path: string) {
-  if (data.entries.some(entry => entry.path === path)) window.location.assign(path);
+  if (data.entries.some(entry => entry.path === path) || standalonePaths.includes(path)) window.location.assign(path);
 }
 function back() {
   let internalReferrer = false;
